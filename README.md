@@ -9,11 +9,11 @@
  'hNN+.-+ssyyso:--/oyhhdhddhhMNNh   :```-ymmmmmmmmddddhysoooo++.  `-     RL -> "English, Spanish"
   mNNshosooyddhyhydmmmddhhdmdNNN     ```smds++//+ohddyo/::-:--:: ``:  Proficiencies: "Photoshop, Illustrator, Word, Excel"
   ddmoh--/+syysso/smddddhhyhhdmd     .``+:o+oo/--:/:/-...--::-.-```   Certifications: "Microsoft Word 2013, WISE Financial Literacy"
-  'so::---:/+++/../ydhhyyssssdh      --. :ddys+//++oy+.----::/::-.-   ——————
+  'so::---:/+++/../ydhhyyssssdh      --. :ddys+//++oy+.----::/::-.-   
    o//`````...---./yyyyssooosd        +ohhdddhysssymmy/-:://++++-:    Contact:
-   yss-````..-////ohdysoo+oohh        oyyNNNNNmmmdddmy////++ooo+-        Email -> "andrew.grant@mail.rit.edu
-   hdmo:.`.++://++oyhhdhyosym:        /++dNNNNmmdyyyyo:-/+oosoo::        Discord -> "AndrewIsntCool#5829"
-    hmh+/..--..-/++osyyysyddm         :-.ohmNmsshyysso/::-:/o+/..
+   yss-````..-////ohdysoo+oohh        oyyNNNNNmmmdddmy////++ooo+-     ——————
+   hdmo:.`.++://++oyhhdhyosym:        /++dNNNNmmdyyyyo:-/+oosoo::     Email: "andrew.grant@mail.rit.edu
+    hmh+/..--..-/++osyyysyddm         :-.ohmNmsshyysso/::-:/o+/..     Discord: "AndrewIsntCool#5829"
     'hdo+-`....:+ooossysydm:           :.:symmddmmdysso+///+/--.
       o.:-....-//+syyyyyhd'             :-osdNmmmmhsooo++/+/-..
      o-```.::ossosdddhddh               /omhdmmmmdyys+/////:--
