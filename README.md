@@ -1,16 +1,31 @@
-### Hi there 👋
-
-<!--
-**Andrew6rant/Andrew6rant** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+```
+ooooooooooooooooooooooooooosssssssssssssssssssssssss
+ooooooooooooooooossosyyyyssoooosssssssssssssssssssss
+oooooooooooooosshysyhmNmmmmdhyyyysssssssssssssssssss
+oooooooooooooydmmmmNmNNNNNNNNNNNmmdhysssssssssssssss
+oooooooooooyhmNNNNNNNNNNNNNNNNNNNNNNNddhssssssssssss
+oooooooooosmNNNNNNNMMMNNNNNNNNNNNMMMNNNNNhssssssssss
++o+oooooooohNNNNNNmmmmmdddddhhdhhddmNMMMNNssssssssss
++++oooooooodNNNNmso++/:///++oso+oossydNMMNysssssssss
+++ooooooooohNNNd/........----:/+oooossmMMNdsssssssss
++oooooooooosNNN+.-+ssyyso:--/oyhhdhddhhMNNhsssssssss
++oooooooooosmNNshosooyddhyhydmmmddhhdmdNNNssssssssss
+ooooooooooosddmoh--/+syysso/smddddhhyhhdmdsssoooooss
+oooooooooosssso::---:/+++/../ydhhyyssssdhssssoooooso
+ooooooosssssso//`````...---./yyyyssooosdssssssssssos
+ooooooossssssyss-````..-////ohdysoo+oohhssssssssssss
+oooooossssssshdmo:.`.++://++oyhhdhyosymmssssssssssss
+oooooosssssssshmh+/..--..-/++osyyysyddmyssssssssssss
+ooooosssssssssyhdo+-`....:+ooossysydmmyyysssssssssss
+ooooossssssssssyo.:-....-//+syyyyyhddyyyyyyyyyssssss
+ooooosssssssssyo-```.::ossosdddhddhyyyyyyyyyyyyyyyyy
+ooooossssyyhdhd:``````./osyhdmmdhyyyyyyyyyyyyyyyyyyy
+sssyhhddmmmNNNmd/.```````.-/osyyysssyyydhhyyyyyyyyyy
+NmNNNNNNNNNNNNNNmy:```````.-/osoooosssyNNNNmmdhyyyyy
+NNNNNNNNNNNNNNNNNNmy:.....-//+oo+++oosmNNNNNMMNNmmdh
+NNNNMNNNNNNNNNNNNNNNNy/------///:::/smNNNNNNNMNNNNNN
+NMMMMMNNNNNNNNNNNNNNNNNds/-..-..--odNNNNNNNNNNMNNNNN
+MMMMMMMMMMMNMMMMNNNNNNNNNmh+--:ohmNNNNNNNNNNNNNMMNNN
+MMMMMMMMMMMMMMMMMNNMNNNNNNNNmmNNNNNNNNNNNNNNNNNNMMNN
+MMMMMMMMMMMMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+```
