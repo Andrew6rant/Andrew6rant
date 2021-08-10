@@ -3,9 +3,9 @@
     .dmmmNmNNNNNNNmmdhy.                 :/+/:.`....-:////            ---
    ,hmNNNNNNNNNNNNNNNNNNddh.          /-....`.```````````..-:/        OS: "Windows 10, iOS"
   hNNNNNNMMMNNNNNNNNNNNMMMNNNmn      :.```````````````````````--:     Uptime: "19 years"
-'hNNNNNNmmmmmdddddhhdhhddmNMMMNN    .```````   ```````````   `````:   Languages (CS): "Java, Python, JS, HTML, CSS"
- dNNNNmso++/:///++oso+oossydNMMNy   :``````.....-----::-::--.`   ``   Languages (IRL): "English, Spanish"
- hNNNd/........----:/+oooossmMMNd   -````.+ossyhyyysso+osoo++/-`  `
+'hNNNNNNmmmmmdddddhhdhhddmNMMMNN    .```````   ```````````   `````:   Host: "Rochester Institute of Technology"
+ dNNNNmso++/:///++oso+oossydNMMNy   :``````.....-----::-::--.`   ``   Languages (CS): "Java, Python, JS, HTML, CSS"
+ hNNNd/........----:/+oooossmMMNd   -````.+ossyhyyysso+osoo++/-`  `   Languages (IRL): "English, Spanish"
  'hNN+.-+ssyyso:--/oyhhdhddhhMNNh   :```-ymmmmmmmmddddhysoooo++.  `-
   mNNshosooyddhyhydmmmddhhdmdNNN     ```smds++//+ohddyo/::-:--:: ``:
   ddmoh--/+syysso/smddddhhyhhdmd     .``+:o+oo/--:/:/-...--::-.-```
