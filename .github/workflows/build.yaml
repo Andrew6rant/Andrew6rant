@@ -19,14 +19,14 @@ jobs:
       - name: Get Python 3.8                               
         uses: actions/setup-python@v2                               
         with:                                 
-          python-version: '3.8'  
+          python-version: '3.8'
       - name: Update README file
         run: python today.py
       - name: Commit
         run: |-
-        git add .
-        git diff
-        git config --global user.email "github-action-bot@example.com"
-        git config --global user.name "GitHub Action Bot"
-        git commit -m "Updated README" -a || echo "No changes to commit"
-        git push
+          git add .
+          git diff
+          git config --global user.email "github-action-bot@example.com"
+          git config --global user.name "GitHub Action Bot"
+          git commit -m "Updated README" -a || echo "No changes to commit"
+          git push
