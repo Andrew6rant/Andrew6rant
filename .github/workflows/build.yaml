@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-python@v2                               
         with:                                 
           python-version: '3.8'
+      - name: Get dateutil
+        run: pip install python-dateutil
       - name: Update README file
         run: python today.py
       - name: Commit
