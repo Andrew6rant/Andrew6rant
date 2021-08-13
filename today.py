@@ -14,7 +14,9 @@ days = diff.days
 
 
 def dailyreadme():
-    if days == 1:
+    if years > 100:
+        return 'null. I am dead"'
+    elif days == 1:
         if months == 1:
             return '{} years, {} month, {} day"'.format(years, months, days)
         else:
@@ -28,6 +30,8 @@ def dailyreadme():
             return '{} years, {} months"'.format(years, months, days)
     elif months == 0:
         return '{} years, {} days"'.format(years, days)
+    else:
+        return '{} years, {} months, {} days"'.format(years, months, days)
 
 
 def converttuple(tup):
