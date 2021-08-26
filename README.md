@@ -5,7 +5,7 @@
   hNNNNNNMMMNNNNNNNNNNNMMMNNNmn      :.```````````````````````--:     Uptime: "19 years, 1 month, 21 days"
 'hNNNNNNmmmmmdddddhhdhhddmNMMMNN    .```````   ```````````   `````:   Host: "Rochester Institute of Technology (RIT)"
  dNNNNmso++/:///++oso+oossydNMMNy   :``````.....-----::-::--.`   ``   Kernel: "College of Electrical and Computer Engineering Technology"
- hNNNd/........----:/+oooossmMMNd   -````.+ossyhyyysso+osoo++/-`  `   IDE: "IntelliJ IDEA 2021.2.1, PyCharm 2020.2"
+ hNNNd/........----:/+oooossmMMNd   -````.+ossyhyyysso+osoo++/-`  `   IDE: "IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2"
  'hNN+.-+ssyyso:--/oyhhdhddhhMNNh   :```-ymmmmmmmmddddhysoooo++.  `-  Languages.CS: "Java, Python, JS, HTML, CSS"
   mNNshosooyddhyhydmmmddhhdmdNNN     ```smds++//+ohddyo/::-:--:: ``:  Languages.RL: "English, Spanish"
   ddmoh--/+syysso/smddddhhyhhdmd     .``+:o+oo/--:/:/-...--::-.-```   Proficiencies: "Photoshop, Illustrator, Word, Excel"
