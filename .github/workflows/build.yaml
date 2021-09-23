@@ -23,6 +23,8 @@ jobs:
       - name: Get dateutil
         run: pip install python-dateutil
       - name: Update README file
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: python today.py
       - name: Commit
         run: |-
