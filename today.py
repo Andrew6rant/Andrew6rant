@@ -77,7 +77,7 @@ def loc():
     added_langs = 0
     final_lang_values = {}
 
-    headers = {'authorization': ACCESS_TOKEN}
+    headers = {'authorization': 'token '+str(ACCESS_TOKEN)}
     # the url without html formatting is: api.github.com/search/repositories?q=user:andrew6rant is:private
     private_repos = requests.get('https://api.github.com/search/repositories?q=user%3Aandrew6rant%20is%3Aprivate', headers=headers).json()
     # Search is much more expensive API-wise, so I split up private and public repos
