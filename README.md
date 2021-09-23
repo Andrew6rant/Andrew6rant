@@ -26,16 +26,16 @@
               `.:sddho:.           Forks: 6
                                    Commits: 371
         .yhmNmdhyy,                Repositories: 19
-    .dmmmNmNNNNNNNmmdhy.           Lines Written:
+    .dmmmNmNNNNNNNmmdhy.           Lines Written: 49,662
    ,hmNNNNNNNNNNNNNNNNNNddh.       Language Breakdown:
-  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn     
-'hNNNNNNmmmmmdddddhhdhhddmNMMMNN    
- dNNNNmso++/:///++oso+oossydNMMNy   
- hNNNd/........----:/+oooossmMMNd   
- 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh   
-  mNNshosooyddhyhydmmmddhhdmdNNN      
-  ddmoh--/+syysso/smddddhhyhhdmd      
-  'so::---:/+++/../ydhhyyssssdh      
+  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       Java...........: 40.82%
+'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JSON...........: 39.18%
+ dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....:  9.72%
+ hNNNd/........----:/+oooossmMMNd     Shell..........:  3.33%
+ 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:  1.76%
+  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.56%
+  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.82%
+  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.79%
    o//`````...---./yyyyssooosd     
    yss-````..-////ohdysoo+oohh     
    hdmo:.`.++://++oyhhdhyosym:     
