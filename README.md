@@ -2,7 +2,7 @@
            ////++                  andrew@grant
       :/+/:.`....-:////            ——————
    /-....`.```````````..-:/        OS: "Windows 10, iOS"
-  :.```````````````````````--:     Uptime: "19 years, 3 months, 20 days"
+  :.```````````````````````--:     Uptime: "19 years, 3 months, 21 days"
  .```````   ```````````   `````:   Host: "Rochester Institute of Technology (RIT)"
  :``````.....-----::-::--.`   ``   Kernel: "College of Electrical and Computer Engineering Technology"
  -````.+ossyhyyysso+osoo++/-`  `   IDE: "IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2"
@@ -26,16 +26,16 @@
               `.:sddho:.           Forks: 6
                                    Commits: 371
         .yhmNmdhyy,                Repositories: 19
-    .dmmmNmNNNNNNNmmdhy.           Lines Written: 57,330
+    .dmmmNmNNNNNNNmmdhy.           Lines Written: 56,062
    ,hmNNNNNNNNNNNNNNNNNNddh.       Language Breakdown:
-  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       JSON...........: 39.95%
-'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      Java...........:  39.1%
- dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....: 10.41%
- hNNNd/........----:/+oooossmMMNd     Shell..........:   3.3%
- 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:  1.76%
-  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.64%
-  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.74%
-  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.72%
+  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       Java...........: 40.09%
+'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JSON...........: 38.44%
+ dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....: 10.67%
+ hNNNd/........----:/+oooossmMMNd     Shell..........:  3.39%
+ 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:   1.8%
+  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.68%
+  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.76%
+  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.74%
    o//`````...---./yyyyssooosd     
    yss-````..-////ohdysoo+oohh     
    hdmo:.`.++://++oyhhdhyosym:     
