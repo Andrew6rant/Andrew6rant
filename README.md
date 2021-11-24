@@ -2,7 +2,7 @@
            ////++                  andrew@grant
       :/+/:.`....-:////            ——————
    /-....`.```````````..-:/        OS: "Windows 10, iOS"
-  :.```````````````````````--:     Uptime: "19 years, 4 months, 18 days"
+  :.```````````````````````--:     Uptime: "19 years, 4 months, 19 days"
  .```````   ```````````   `````:   Host: "Rochester Institute of Technology (RIT)"
  :``````.....-----::-::--.`   ``   Kernel: "College of Electrical and Computer Engineering Technology"
  -````.+ossyhyyysso+osoo++/-`  `   IDE: "IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2"
@@ -26,16 +26,16 @@
               `.:sddho:.           Forks: 6
                                    Commits: 437
         .yhmNmdhyy,                Repositories: 26
-    .dmmmNmNNNNNNNmmdhy.           Lines Written: 387,345
+    .dmmmNmNNNNNNNmmdhy.           Lines Written: 388,000
    ,hmNNNNNNNNNNNNNNNNNNddh.       Language Breakdown:
-  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       Java...........: 39.99%
-'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JSON...........: 37.98%
- dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....: 10.84%
- hNNNd/........----:/+oooossmMMNd     Shell..........:  3.57%
- 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:   1.9%
-  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.77%
-  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.75%
-  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.73%
+  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       Java...........: 39.44%
+'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JSON...........: 38.81%
+ dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....:  10.7%
+ hNNNd/........----:/+oooossmMMNd     Shell..........:  3.53%
+ 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:  1.88%
+  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.74%
+  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.74%
+  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.72%
    o//`````...---./yyyyssooosd     
    yss-````..-////ohdysoo+oohh     
    hdmo:.`.++://++oyhhdhyosym:     
