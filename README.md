@@ -2,7 +2,7 @@
            ////++                  andrew@grant
       :/+/:.`....-:////            ——————
    /-....`.```````````..-:/        OS: "Windows 10, iOS"
-  :.```````````````````````--:     Uptime: "19 years, 5 months, 17 days"
+  :.```````````````````````--:     Uptime: "19 years, 5 months, 18 days"
  .```````   ```````````   `````:   Host: "Rochester Institute of Technology (RIT)"
  :``````.....-----::-::--.`   ``   Kernel: "College of Electrical and Computer Engineering Technology"
  -````.+ossyhyyysso+osoo++/-`  `   IDE: "IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2"
@@ -26,16 +26,16 @@
               `.:sddho:.           Forks: 6
                                    Commits: 437
         .yhmNmdhyy,                Repositories: 26
-    .dmmmNmNNNNNNNmmdhy.           Lines Written: 396,221
+    .dmmmNmNNNNNNNmmdhy.           Lines Written: 624,592
    ,hmNNNNNNNNNNNNNNNNNNddh.       Language Breakdown:
-  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       Java...........:  39.5%
-'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JSON...........: 38.74%
- dNNNNmso++/:///++oso+oossydNMMNy     JavaScript.....:  10.7%
- hNNNd/........----:/+oooossmMMNd     Shell..........:  3.53%
- 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     Batch..........:  1.88%
-  mNNshosooyddhyhydmmmddhhdmdNNN      Gradle.........:  1.75%
-  ddmoh--/+syysso/smddddhhyhhdmd      YAML...........:  0.74%
-  'so::---:/+++/../ydhhyyssssdh       Objective C....:  0.72%
+  hNNNNNNMMMNNNNNNNNNNNMMMNNNmn       TypeScript.....: 53.07%
+'hNNNNNNmmmmmdddddhhdhhddmNMMMNN      JavaScript.....: 21.37%
+ dNNNNmso++/:///++oso+oossydNMMNy     JSON...........: 14.81%
+ hNNNd/........----:/+oooossmMMNd     Java...........:  7.31%
+ 'hNN+.-+ssyyso:--/oyhhdhddhhMNNh     TypeScript Typings:  0.78%
+  mNNshosooyddhyhydmmmddhhdmdNNN      Shell..........:  0.65%
+  ddmoh--/+syysso/smddddhhyhhdmd      Plain Text.....:  0.48%
+  'so::---:/+++/../ydhhyyssssdh       Batch..........:  0.35%
    o//`````...---./yyyyssooosd     
    yss-````..-////ohdysoo+oohh     
    hdmo:.`.++://++oyhhdhyosym:     
