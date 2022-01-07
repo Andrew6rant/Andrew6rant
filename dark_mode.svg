@@ -1,12 +1,12 @@
 <svg font-family="Andale Mono,AndaleMono,monospace" width="975px" height="550px" xmlns="http://www.w3.org/2000/svg">
 <style>
-.keyColor {fill: #f59545;}
-.valueColor {fill: #a5d6f6;}
+.keyColor {fill: #ffa657;}
+.valueColor {fill: #a5d6ff;}
 text, tspan {white-space: pre;}
 </style>
 
 <rect width="970px" height="530px" fill="#161b22" rx="15"/>
-<text x="10" y="30" fill="white">           ////++                  andrew@grant
+<text x="10" y="30" fill="#c9d1d9">           ////++                  andrew@grant
 <tspan x="10" dy="20">      :/+/:.`....-:////            ——————</tspan>
 <tspan x="10" dy="20">   /-....`.```````````..-:/       </tspan> <tspan class="keyColor">OS</tspan><tspan class="valueColor">: "Windows 10, iOS"</tspan>
 <tspan x="10" dy="20">  :.```````````````````````--:    </tspan> <tspan class="keyColor">Uptime</tspan><tspan class="valueColor">: "19 years, 5 months, 28 days"</tspan>
