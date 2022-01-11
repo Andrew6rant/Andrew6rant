@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><svg xmlns="http://www.w3.org/2000/svg" font-family="Andale Mono,AndaleMono,monospace" width="975px" height="550px">
+<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" font-family="Andale Mono,AndaleMono,monospace" width="975px" height="550px">
 <style>
 .keyColor {fill: #ffa657;}
 .valueColor {fill: #a5d6ff;}
@@ -7,7 +7,7 @@ text, tspan {white-space: pre;}
 
 <rect width="970px" height="530px" fill="#161b22" rx="15"/>
 <text x="10" y="30" fill="#c9d1d9">           ////++                  andrew@grant
-<tspan x="10" dy="20">      :/+/:.`....-:////            &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</tspan>
+<tspan x="10" dy="20">      :/+/:.`....-:////            ——————</tspan>
 <tspan x="10" dy="20">   /-....`.```````````..-:/       </tspan> <tspan class="keyColor">OS</tspan><tspan class="valueColor">: Windows 10, iOS</tspan>
 <tspan x="10" dy="20">  :.```````````````````````--:    </tspan> <tspan class="keyColor">Uptime</tspan><tspan class="valueColor">: 19 years, 6 months, 5 days</tspan>
 <tspan x="10" dy="20"> .```````   ```````````   `````:  </tspan> <tspan class="keyColor">Host</tspan><tspan class="valueColor">: Rochester Institute of Technology (RIT)</tspan>
@@ -23,13 +23,13 @@ text, tspan {white-space: pre;}
 <tspan x="10" dy="20">   :-.ohmNmsshyysso/::-:/o+/..    </tspan> <tspan class="keyColor">Hobbies</tspan><tspan class="valueColor">.</tspan><tspan class="keyColor">Hardware</tspan><tspan class="valueColor">: Overclocking, Undervolting</tspan>
 <tspan x="10" dy="20">    :.:symmddmmdysso+///+/--.      </tspan>
 <tspan x="10" dy="20">     :-osdNmmmmhsooo++/+/-..      </tspan> <tspan class="keyColor">Contact</tspan><tspan class="valueColor">:</tspan>
-<tspan x="10" dy="20">     /omhdmmmmdyys+/////:--       </tspan> <tspan>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</tspan>
+<tspan x="10" dy="20">     /omhdmmmmdyys+/////:--       </tspan> <tspan>——————</tspan>
 <tspan x="10" dy="20">    /odNNNmhho++o+---:--:         </tspan> <tspan class="keyColor">Email</tspan><tspan class="valueColor">: andrew.grant@mail.rit.edu</tspan>
 <tspan x="10" dy="20">   :-hNNNNNNmyo+/:-..-:           </tspan> <tspan class="keyColor">Discord</tspan><tspan class="valueColor">: AndrewIsntCool#5829</tspan>
 <tspan x="10" dy="20">   `.-ymNNNNNNNmdyo+///+++         </tspan>
 <tspan x="10" dy="20">      ./hNNNNNNNmdyo+oooo+++      </tspan> <tspan class="keyColor">GitHub Stats</tspan><tspan class="valueColor">: Work in progress for now, will be fully automated later</tspan>
-<tspan x="10" dy="20">       `./hmmmmmdyysoosssoo+.     </tspan> <tspan>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</tspan>
-<tspan x="10" dy="20">           ``-+ydmmdmmddo-        </tspan> <tspan class="keyColor">Commits</tspan><tspan class="valueColor">: 518         </tspan> &#x2502; <tspan class="keyColor">Stars</tspan><tspan class="valueColor">: 31</tspan>
-<tspan x="10" dy="20">              `.:sddho:.          </tspan> <tspan class="keyColor">Repositories</tspan><tspan class="valueColor">: 30     </tspan> &#x2502; <tspan class="keyColor">Lines Written</tspan><tspan class="valueColor">: 452,961</tspan>
+<tspan x="10" dy="20">       `./hmmmmmdyysoosssoo+.     </tspan> <tspan>——————</tspan>
+<tspan x="10" dy="20">           ``-+ydmmdmmddo-        </tspan> <tspan class="keyColor">Commits</tspan><tspan class="valueColor">: 518         </tspan> │ <tspan class="keyColor">Stars</tspan><tspan class="valueColor">: 31</tspan>
+<tspan x="10" dy="20">              `.:sddho:.          </tspan> <tspan class="keyColor">Repositories</tspan><tspan class="valueColor">: 30     </tspan> │ <tspan class="keyColor">Lines Written</tspan><tspan class="valueColor">: 452,961</tspan>
 </text>
 </svg>
