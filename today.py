@@ -2,8 +2,6 @@ import codecs
 from datetime import datetime
 from dateutil import relativedelta
 from xml.dom import minidom
-import requests
-import os
 
 date1 = datetime(2002, 7, 5)
 now = datetime.today()
@@ -36,3 +34,4 @@ def svg_overwrite(filename):
 
 if __name__ == '__main__':
     svg_overwrite("dark_mode.svg")
+    svg_overwrite("light_mode.svg")
