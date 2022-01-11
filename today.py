@@ -1,4 +1,3 @@
-import codecs
 from datetime import datetime
 from dateutil import relativedelta
 from xml.dom import minidom
@@ -26,7 +25,7 @@ def format_plural(unit):
 
 def svg_overwrite(filename):
     svg = minidom.parse(filename)
-    f = codecs.open(filename, mode='w', encoding='utf-8')
+    f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
     tspan[6].firstChild.data = daily_readme()
     f.write(svg.toxml("utf-8").decode("utf-8"))
