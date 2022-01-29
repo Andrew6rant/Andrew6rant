@@ -9,7 +9,7 @@ text, tspan {white-space: pre;}
 <text x="10" y="30" fill="#c9d1d9">           ////++                  andrew@grant
 <tspan x="10" dy="20">      :/+/:.`....-:////            ——————</tspan>
 <tspan x="10" dy="20">   /-....`.```````````..-:/       </tspan> <tspan class="keyColor">OS</tspan><tspan class="valueColor">: Windows 10, iOS</tspan>
-<tspan x="10" dy="20">  :.```````````````````````--:    </tspan> <tspan class="keyColor">Uptime</tspan><tspan class="valueColor">: 19 years, 6 months, 23 days</tspan>
+<tspan x="10" dy="20">  :.```````````````````````--:    </tspan> <tspan class="keyColor">Uptime</tspan><tspan class="valueColor">: 19 years, 6 months, 24 days</tspan>
 <tspan x="10" dy="20"> .```````   ```````````   `````:  </tspan> <tspan class="keyColor">Host</tspan><tspan class="valueColor">: Rochester Institute of Technology (RIT)</tspan>
 <tspan x="10" dy="20"> :``````.....-----::-::--.`   ``  </tspan> <tspan class="keyColor">Kernel</tspan><tspan class="valueColor">: College of Electrical and Computer Engineering Technology</tspan>
 <tspan x="10" dy="20"> -````.+ossyhyyysso+osoo++/-`  `  </tspan> <tspan class="keyColor">IDE</tspan><tspan class="valueColor">: IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
