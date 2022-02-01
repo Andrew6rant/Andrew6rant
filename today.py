@@ -14,7 +14,7 @@ days = diff.days
 
 
 def daily_readme():
-    return ': {} {}, {} {}, {} {}'.format(years, 'year' + format_plural(years), months, 'month' + format_plural(months), days, 'day' + format_plural(days))
+    return '{} {}, {} {}, {} {}'.format(years, 'year' + format_plural(years), months, 'month' + format_plural(months), days, 'day' + format_plural(days))
 
 
 def format_plural(unit):
@@ -27,7 +27,7 @@ def svg_overwrite(filename):
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
-    tspan[9].firstChild.data = daily_readme()
+    tspan[30].firstChild.data = daily_readme()
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 

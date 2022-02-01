@@ -6,33 +6,59 @@ text, tspan {white-space: pre;}
 </style>
 
 <rect width="970px" height="530px" fill="#161b22" rx="15"/>
-<text x="10" y="30" fill="#c9d1d9">
 
-<tspan x="10" dy="0" class="ascii">           ////++                  </tspan><tspan>andrew@grant</tspan>
-<tspan x="10" dy="20" class="ascii">      :/+/:.`....-:////           </tspan> <tspan>——————</tspan>
-<tspan x="10" dy="20" class="ascii">   /-....`.```````````..-:/       </tspan> <tspan class="keyColor">OS</tspan><tspan class="valueColor">: Windows 10, iOS</tspan>
-<tspan x="10" dy="20" class="ascii">  :.```````````````````````--:    </tspan> <tspan class="keyColor">Uptime</tspan><tspan class="valueColor">: 19 years, 6 months, 27 days</tspan>
-<tspan x="10" dy="20" class="ascii"> .```````   ```````````   `````:  </tspan> <tspan class="keyColor">Host</tspan><tspan class="valueColor">: Rochester Institute of Technology (RIT)</tspan>
-<tspan x="10" dy="20" class="ascii"> :``````.....-----::-::--.`   ``  </tspan> <tspan class="keyColor">Kernel</tspan><tspan class="valueColor">: College of Electrical and Computer Engineering Technology</tspan>
-<tspan x="10" dy="20" class="ascii"> -````.+ossyhyyysso+osoo++/-`  `  </tspan> <tspan class="keyColor">IDE</tspan><tspan class="valueColor">: IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
-<tspan x="10" dy="20" class="ascii"> :```-ymmmmmmmmddddhysoooo++.  `- </tspan> <tspan class="keyColor">Languages</tspan><tspan class="valueColor">.</tspan><tspan class="keyColor">CS</tspan><tspan class="valueColor">: Java, Python, JS, HTML, CSS</tspan>
-<tspan x="10" dy="20" class="ascii">  ```smds++//+ohddyo/::-:--:: ``: </tspan> <tspan class="keyColor">Languages</tspan><tspan class="valueColor">.</tspan><tspan class="keyColor">RL</tspan><tspan class="valueColor">: English, Spanish</tspan>
-<tspan x="10" dy="20" class="ascii">  .``+:o+oo/--:/:/-...--::-.-```  </tspan> <tspan class="keyColor">Proficiencies</tspan><tspan class="valueColor">: Photoshop, Illustrator, Word, Excel</tspan>
-<tspan x="10" dy="20" class="ascii">  --. :ddys+//++oy+.----::/::-.-  </tspan> <tspan class="keyColor">Certifications</tspan><tspan class="valueColor">: Microsoft Word 2013, WISE Financial Literacy</tspan>
-<tspan x="10" dy="20" class="ascii">   +ohhdddhysssymmy/-:://++++-:   </tspan> <tspan class="keyColor">Hobbies</tspan><tspan class="valueColor">.</tspan><tspan class="keyColor">Software</tspan><tspan class="valueColor">:</tspan>
-<tspan x="10" dy="20" class="ascii">   oyyNNNNNmmmdddmy////++ooo+-    </tspan> <tspan class="valueColor"> - Minecraft Modding (Java)</tspan>
-<tspan x="10" dy="20" class="ascii">   /++dNNNNmmdyyyyo:-/+oosoo::    </tspan> <tspan class="valueColor"> - iOS Jailbreaking (Logos, Objective-C)</tspan>
-<tspan x="10" dy="20" class="ascii">   :-.ohmNmsshyysso/::-:/o+/..    </tspan> <tspan class="keyColor">Hobbies</tspan><tspan class="valueColor">.</tspan><tspan class="keyColor">Hardware</tspan><tspan class="valueColor">: Overclocking, Undervolting</tspan>
-<tspan x="10" dy="20" class="ascii">    :.:symmddmmdysso+///+/--.     </tspan>
-<tspan x="10" dy="20" class="ascii">     :-osdNmmmmhsooo++/+/-..      </tspan> <tspan class="keyColor">Contact</tspan><tspan class="valueColor">:</tspan>
-<tspan x="10" dy="20" class="ascii">     /omhdmmmmdyys+/////:--       </tspan> <tspan>——————</tspan>
-<tspan x="10" dy="20" class="ascii">    /odNNNmhho++o+---:--:         </tspan> <tspan class="keyColor">Email</tspan><tspan class="valueColor">: andrew.grant@mail.rit.edu</tspan>
-<tspan x="10" dy="20" class="ascii">   :-hNNNNNNmyo+/:-..-:           </tspan> <tspan class="keyColor">Discord</tspan><tspan class="valueColor">: AndrewIsntCool#5829</tspan>
-<tspan x="10" dy="20" class="ascii">   `.-ymNNNNNNNmdyo+///+++        </tspan>
-<tspan x="10" dy="20" class="ascii">      ./hNNNNNNNmdyo+oooo+++      </tspan> <tspan class="keyColor">GitHub Stats</tspan><tspan class="valueColor">: Work in progress for now, will be fully automated later</tspan>
-<tspan x="10" dy="20" class="ascii">       `./hmmmmmdyysoosssoo+.     </tspan> <tspan>——————</tspan>
-<tspan x="10" dy="20" class="ascii">           ``-+ydmmdmmddo-        </tspan> <tspan class="keyColor">Commits</tspan><tspan class="valueColor">: 542         </tspan> │ <tspan class="keyColor">Stars</tspan><tspan class="valueColor">: 26</tspan>
-<tspan x="10" dy="20" class="ascii">              `.:sddho:.          </tspan> <tspan class="keyColor">Repositories</tspan><tspan class="valueColor">: 43     </tspan> │ <tspan class="keyColor">Lines Written</tspan><tspan class="valueColor">: 453,318</tspan>
-
+<text x="10" y="30" fill="#c9d1d9" class="ascii">
+<tspan x="10" dy="0">           ////++                  </tspan>
+<tspan x="10" dy="20">      :/+/:.`....-:////           </tspan>
+<tspan x="10" dy="20">   /-....`.```````````..-:/       </tspan>
+<tspan x="10" dy="20">  :.```````````````````````--:    </tspan>
+<tspan x="10" dy="20"> .```````   ```````````   `````:  </tspan>
+<tspan x="10" dy="20"> :``````.....-----::-::--.`   ``  </tspan>
+<tspan x="10" dy="20"> -````.+ossyhyyysso+osoo++/-`  `  </tspan>
+<tspan x="10" dy="20"> :```-ymmmmmmmmddddhysoooo++.  `- </tspan>
+<tspan x="10" dy="20">  ```smds++//+ohddyo/::-:--:: ``: </tspan>
+<tspan x="10" dy="20">  .``+:o+oo/--:/:/-...--::-.-```  </tspan>
+<tspan x="10" dy="20">  --. :ddys+//++oy+.----::/::-.-  </tspan>
+<tspan x="10" dy="20">   +ohhdddhysssymmy/-:://++++-:   </tspan>
+<tspan x="10" dy="20">   oyyNNNNNmmmdddmy////++ooo+-    </tspan>
+<tspan x="10" dy="20">   /++dNNNNmmdyyyyo:-/+oosoo::    </tspan>
+<tspan x="10" dy="20">   :-.ohmNmsshyysso/::-:/o+/..    </tspan>
+<tspan x="10" dy="20">    :.:symmddmmdysso+///+/--.     </tspan>
+<tspan x="10" dy="20">     :-osdNmmmmhsooo++/+/-..      </tspan>
+<tspan x="10" dy="20">     /omhdmmmmdyys+/////:--       </tspan>
+<tspan x="10" dy="20">    /odNNNmhho++o+---:--:         </tspan>
+<tspan x="10" dy="20">   :-hNNNNNNmyo+/:-..-:           </tspan>
+<tspan x="10" dy="20">   `.-ymNNNNNNNmdyo+///+++        </tspan>
+<tspan x="10" dy="20">      ./hNNNNNNNmdyo+oooo+++      </tspan>
+<tspan x="10" dy="20">       `./hmmmmmdyysoosssoo+.     </tspan>
+<tspan x="10" dy="20">           ``-+ydmmdmmddo-        </tspan>
+<tspan x="10" dy="20">              `.:sddho:.          </tspan>
 </text>
+
+<text x="300" y="30" fill="#c9d1d9">
+<tspan x="300" dy="0">andrew@grant</tspan>
+<tspan x="300" dy="20">——————</tspan>
+<tspan x="300" dy="20" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
+<tspan x="300" dy="20" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 6 months, 27 days</tspan>
+<tspan x="300" dy="20" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology (RIT)</tspan>
+<tspan x="300" dy="20" class="keyColor">Kernel</tspan>: <tspan class="valueColor">College of Electrical and Computer Engineering Technology</tspan>
+<tspan x="300" dy="20" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
+<tspan x="300" dy="20" class="keyColor">Languages</tspan>.<tspan class="keyColor">CS</tspan>: <tspan class="valueColor">Java, Python, JS, HTML, CSS</tspan>
+<tspan x="300" dy="20" class="keyColor">Languages</tspan>.<tspan class="keyColor">RL</tspan>: <tspan class="valueColor">English, Spanish</tspan>
+<tspan x="300" dy="20" class="keyColor">Proficiencies</tspan>: <tspan class="valueColor">Photoshop, Illustrator, Word, Excel</tspan>
+<tspan x="300" dy="20" class="keyColor">Certifications</tspan>: <tspan class="valueColor">Microsoft Word 2013, WISE Financial Literacy</tspan>
+<tspan x="300" dy="20" class="keyColor">Hobbies</tspan>.<tspan class="keyColor">Software</tspan>:
+<tspan x="300" dy="20" class="valueColor"> - Minecraft Modding (Java)</tspan>
+<tspan x="300" dy="20" class="valueColor"> - iOS Jailbreaking (Logos, Objective-C)</tspan>
+<tspan x="300" dy="20" class="keyColor">Hobbies</tspan>.<tspan class="keyColor">Hardware</tspan>: <tspan class="valueColor">Overclocking, Undervolting</tspan>
+<tspan x="300" dy="40" class="keyColor">Contact</tspan>:
+<tspan x="300" dy="20">——————</tspan>
+<tspan x="300" dy="20" class="keyColor">Email</tspan>: <tspan class="valueColor">andrew.grant@mail.rit.edu</tspan>
+<tspan x="300" dy="20" class="keyColor">Discord</tspan>: <tspan class="valueColor">AndrewIsntCool#5829</tspan>
+<tspan x="300" dy="40" class="keyColor">GitHub Stats: </tspan><tspan class="valueColor">Work in progress for now, will be fully automated later</tspan>
+<tspan x="300" dy="20">——————</tspan>
+<tspan x="300" dy="20" class="keyColor">Commits</tspan>: <tspan class="valueColor">542         </tspan> │ <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">26</tspan>
+<tspan x="300" dy="20" class="keyColor">Repositories</tspan>: <tspan class="valueColor">43     </tspan> │ <tspan class="keyColor">Lines Written</tspan>: <tspan class="valueColor">453,318</tspan>
+</text>
+
 </svg>
