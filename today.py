@@ -27,7 +27,7 @@ def svg_overwrite(filename):
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
-    tspan[6].firstChild.data = daily_readme()
+    tspan[9].firstChild.data = daily_readme()
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
