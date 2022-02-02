@@ -13,13 +13,13 @@ text, tspan {white-space: pre;}
         transform: translateY(-53000px);
     }
 }
-webkit-@keyframes IDE {
+@-webkit-keyframes IDE {
 /* This doesn't seem to work at all on ios :( */
     to {
         -webkit-transform: translateY(-53000px);
     }
 }
-moz-@keyframes IDE {
+@-moz-keyframes IDE {
     to {
         -moz-transform: translateY(-53000px);
     }
