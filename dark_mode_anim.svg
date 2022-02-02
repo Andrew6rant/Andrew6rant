@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" font-family="Andale Mono,AndaleMono,monospace" width="975px" height="550px" preserveAspectRatio="xMidYMax meet">
+<style>
+.keyColor {fill: #ffa657;}
+.valueColor {fill: #a5d6ff;}
+text, tspan {white-space: pre;}
+#IDE_test {
+    animation: IDE 20s steps(106, end) infinite;
+    -webkit-animation: IDE 20s steps(106, end) infinite;
+    -moz-animation: IDE 20s steps(106, end) infinite;
+}
+@keyframes IDE {
+    to {
+        transform: translateY(-53000px);
+    }
+}
+webkit-@keyframes IDE {
+/* This doesn't seem to work at all on ios :( */
+    to {
+        -webkit-transform: translateY(-53000px);
+    }
+}
+moz-@keyframes IDE {
+    to {
+        -moz-transform: translateY(-53000px);
+    }
+}
+</style>
+
+<rect width="970px" height="530px" fill="#161b22" rx="15"/>
+
+<text x="320" y="30" fill="#c9d1d9">
+<tspan x="320" dy="0">andrew@grant</tspan>
+<tspan x="320" dy="20">——————</tspan>
+<tspan x="320" dy="20" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
+<tspan x="320" dy="20" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 6 months, 28 days</tspan>
+<tspan x="320" dy="20" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology (RIT)</tspan>
+<tspan x="320" dy="20" class="keyColor">Kernel</tspan>: <tspan class="valueColor">College of Electrical and Computer Engineering Technology</tspan>
+
+<tspan x="320" dy="40" class="keyColor">Languages</tspan>.<tspan class="keyColor">CS</tspan>: <tspan class="valueColor">Java, Python, JS, HTML, CSS</tspan>
+<tspan x="320" dy="20" class="keyColor">Languages</tspan>.<tspan class="keyColor">RL</tspan>: <tspan class="valueColor">English, Spanish</tspan>
+<tspan x="320" dy="20" class="keyColor">Proficiencies</tspan>: <tspan class="valueColor">Photoshop, Illustrator, Word, Excel</tspan>
+<tspan x="320" dy="20" class="keyColor">Certifications</tspan>: <tspan class="valueColor">Microsoft Word 2013, WISE Financial Literacy</tspan>
+<tspan x="320" dy="20" class="keyColor">Hobbies</tspan>.<tspan class="keyColor">Software</tspan>:
+<tspan x="320" dy="20" class="valueColor"> - Minecraft Modding (Java)</tspan>
+<tspan x="320" dy="20" class="valueColor"> - iOS Jailbreaking (Logos, Objective-C)</tspan>
+<tspan x="320" dy="20" class="keyColor">Hobbies</tspan>.<tspan class="keyColor">Hardware</tspan>: <tspan class="valueColor">Overclocking, Undervolting</tspan>
+<tspan x="320" dy="40" class="keyColor">Contact</tspan>:
+<tspan x="320" dy="20">——————</tspan>
+<tspan x="320" dy="20" class="keyColor">Email</tspan>: <tspan class="valueColor">andrew.grant@mail.rit.edu</tspan>
+<tspan x="320" dy="20" class="keyColor">Discord</tspan>: <tspan class="valueColor">AndrewIsntCool#5829</tspan>
+<tspan x="320" dy="40" class="keyColor">GitHub Stats: </tspan><tspan class="valueColor">Work in progress for now, will be fully automated later</tspan>
+<tspan x="320" dy="20">——————</tspan>
+<tspan x="320" dy="20" class="keyColor">Commits</tspan>: <tspan class="valueColor">542         </tspan> │ <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">26</tspan>
+<tspan x="320" dy="20" class="keyColor">Repositories</tspan>: <tspan class="valueColor">43     </tspan> │ <tspan class="keyColor">Lines Written</tspan>: <tspan class="valueColor">453,318</tspan>
+</text>
+
+<text id="IDE" x="320" y="930" fill="#c9d1d9">
+<tspan x="320" dy="120" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">VSCode 1.63.2, WebStorm 2021.2.2, Eclipse 4.2.1</tspan>
+</text>
+
+<text id="IDE_test" x="320" y="150" fill="#c9d1d9">
+<!--
+Yes, I know this is absolutely disgusting XML. It is temporary until I figure out how to properly cull the edges of a single scrolling text,
+since SVG doesn't seem to support the "overflow" property on all web browsers.
+-->
+<tspan x="320" dy="000" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.6</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">telliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">elliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">lliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">liJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">iJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, W</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">J IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, We</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Web</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webs</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">DEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webst</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">EA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Websto</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">A 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstor</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">21.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 20</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 202</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">PyCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">yCharm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, E</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">Charm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Ec</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">harm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Ecl</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">arm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Ecli</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">rm 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclip</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">m 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclips</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">020.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">20.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">0.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">Brackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, I</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">rackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, In</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ackets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, Int</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ckets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, Inte</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">kets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, Intel</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ets 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, Intell</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ts 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, Intelli</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">s 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ I</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ ID</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">14.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDE</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">4.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 20</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 202</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">VSCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">SCode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">Code 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ode 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">de 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">e 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, P</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, Py</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyC</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">63.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCh</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">3.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCha</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyChar</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">Webstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 20</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ebstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 202</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">bstorm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 202</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">storm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">torm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">orm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">rm 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">m 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, B</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Br</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">021.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Bra</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">21.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brac</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brack</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Bracke</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Bracket</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">Eclipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.1</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">clipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">lipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">ipse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">pse 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2,</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">se 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">e 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, V</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> 4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VS</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">4.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSC</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCo</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">2.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCod</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">.1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">1, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode </tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">, IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1</tspan>
+<tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor"> IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2, VSCode 1.</tspan>
+</text>
+
+<text x="10" y="30" fill="#c9d1d9" class="ascii">
+<tspan x="10" dy="00">           ////++                 </tspan>
+<tspan x="10" dy="20">      :/+/:.`....-:////           </tspan>
+<tspan x="10" dy="20">   /-....`.```````````..-:/       </tspan>
+<tspan x="10" dy="20">  :.```````````````````````--:    </tspan>
+<tspan x="10" dy="20"> .```````   ```````````   `````:  </tspan>
+<tspan x="10" dy="20"> :``````.....-----::-::--.`   ``  </tspan>
+<tspan x="10" dy="20"> -````.+ossyhyyysso+osoo++/-`  `  </tspan>
+<tspan x="10" dy="20"> :```-ymmmmmmmmddddhysoooo++.  `- </tspan>
+<tspan x="10" dy="20">  ```smds++//+ohddyo/::-:--:: ``: </tspan>
+<tspan x="10" dy="20">  .``+:o+oo/--:/:/-...--::-.-```  </tspan>
+<tspan x="10" dy="20">  --. :ddys+//++oy+.----::/::-.-  </tspan>
+<tspan x="10" dy="20">   +ohhdddhysssymmy/-:://++++-:   </tspan>
+<tspan x="10" dy="20">   oyyNNNNNmmmdddmy////++ooo+-    </tspan>
+<tspan x="10" dy="20">   /++dNNNNmmdyyyyo:-/+oosoo::    </tspan>
+<tspan x="10" dy="20">   :-.ohmNmsshyysso/::-:/o+/..    </tspan>
+<tspan x="10" dy="20">    :.:symmddmmdysso+///+/--.     </tspan>
+<tspan x="10" dy="20">     :-osdNmmmmhsooo++/+/-..      </tspan>
+<tspan x="10" dy="20">     /omhdmmmmdyys+/////:--       </tspan>
+<tspan x="10" dy="20">    /odNNNmhho++o+---:--:         </tspan>
+<tspan x="10" dy="20">   :-hNNNNNNmyo+/:-..-:           </tspan>
+<tspan x="10" dy="20">   `.-ymNNNNNNNmdyo+///+++        </tspan>
+<tspan x="10" dy="20">      ./hNNNNNNNmdyo+oooo+++      </tspan>
+<tspan x="10" dy="20">       `./hmmmmmdyysoosssoo+.     </tspan>
+<tspan x="10" dy="20">           ``-+ydmmdmmddo-        </tspan>
+<tspan x="10" dy="20">              `.:sddho:.          </tspan>
+
+</text>
+
+</svg>
