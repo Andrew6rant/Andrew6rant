@@ -39,7 +39,7 @@ text, tspan {white-space: pre;}
 <tspan x="320" dy="0">andrew@grant</tspan>
 <tspan x="320" dy="20">——————</tspan>
 <tspan x="320" dy="20" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
-<tspan x="320" dy="20" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 6 months, 27 days</tspan>
+<tspan x="320" dy="20" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 6 months, 28 days</tspan>
 <tspan x="320" dy="20" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology (RIT)</tspan>
 <tspan x="320" dy="20" class="keyColor">Kernel</tspan>: <tspan class="valueColor">College of Electrical and Computer Engineering Technology</tspan>
 <tspan x="320" dy="20" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, PyCharm 2020.2, Brackets 1.14.2</tspan>
