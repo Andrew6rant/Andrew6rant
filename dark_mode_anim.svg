@@ -3,47 +3,47 @@
 .keyColor {fill: #ffa657;}
 .valueColor {fill: #a5d6ff;}
 text, tspan {white-space: pre;}
-#IDE_test {
-    -webkit-animation: IDE 20s steps(106) infinite;
-    -moz-animation: IDE 20s steps(106) infinite;
-    -ms-animation: IDE 20s steps(106) infinite;
-    -o-animation: IDE 20s steps(106) infinite;
-    animation: IDE 20s steps(106) infinite;
+#ide_test {
+    -webkit-animation: ide 20s steps(106) infinite;
+    -moz-animation: ide 20s steps(106) infinite;
+    -ms-animation: ide 20s steps(106) infinite;
+    -o-animation: ide 20s steps(106) infinite;
+    animation: ide 20s steps(106) infinite;
 }
-@-webkit-keyframes IDE {
+@-webkit-keyframes ide {
 /* This doesn't seem to work at all on ios :( */
     from {
-        transform: translateY(0px);
+        -webkit-transform: translateY(0px);
     }
     to {
         -webkit-transform: translateY(-53000px);
     }
 }
-@-moz-keyframes IDE {
+@-moz-keyframes ide {
     from {
-        transform: translateY(0px);
+        -moz-transform: translateY(0px);
     }
     to {
         -moz-transform: translateY(-53000px);
     }
 }
-@-ms-keyframes IDE {
+@-ms-keyframes ide {
     from {
-        transform: translateY(0px);
+        -ms-transform: translateY(0px);
     }
     to {
-        transform: translateY(-53000px);
+        -ms-transform: translateY(-53000px);
     }
 }
-@-o-keyframes IDE {
+@-o-keyframes ide {
     from {
-        transform: translateY(0px);
+        -o-transform: translateY(0px);
     }
     to {
-        transform: translateY(-53000px);
+        -o-transform: translateY(-53000px);
     }
 }
-@keyframes IDE {
+@keyframes ide {
     from {
         transform: translateY(0px);
     }
@@ -86,7 +86,7 @@ text, tspan {white-space: pre;}
 <tspan x="320" dy="500" class="keyColor">IDE</tspan>: <tspan class="valueColor">VSCode 1.63.2, WebStorm 2021.2.2, Eclipse 4.2.1</tspan>
 </text>
 
-<text id="IDE_test" x="320" y="150" fill="#c9d1d9">
+<text id="ide_test" x="320" y="150" fill="#c9d1d9">
 <!--
 Yes, I know this is absolutely disgusting XML. It is temporary until I figure out how to properly cull the edges of a single scrolling text,
 since SVG doesn't seem to support the "overflow" property on all web browsers.
