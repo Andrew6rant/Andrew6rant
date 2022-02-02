@@ -4,24 +4,51 @@
 .valueColor {fill: #a5d6ff;}
 text, tspan {white-space: pre;}
 #IDE_test {
-    animation: IDE 20s steps(106, end) infinite;
-    -webkit-animation: IDE 20s steps(106, end) infinite;
-    -moz-animation: IDE 20s steps(106, end) infinite;
-}
-@keyframes IDE {
-    to {
-        transform: translateY(-53000px);
-    }
+    -webkit-animation: IDE 20s steps(106) infinite;
+    -moz-animation: IDE 20s steps(106) infinite;
+    -ms-animation: IDE 20s steps(106) infinite;
+    -o-animation: IDE 20s steps(106) infinite;
+    animation: IDE 20s steps(106) infinite;
 }
 @-webkit-keyframes IDE {
 /* This doesn't seem to work at all on ios :( */
+    from {
+        transform: translateY(0px);
+    }
     to {
         -webkit-transform: translateY(-53000px);
     }
 }
 @-moz-keyframes IDE {
+    from {
+        transform: translateY(0px);
+    }
     to {
         -moz-transform: translateY(-53000px);
+    }
+}
+@-ms-keyframes IDE {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-53000px);
+    }
+}
+@-o-keyframes IDE {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-53000px);
+    }
+}
+@keyframes IDE {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-53000px);
     }
 }
 </style>
