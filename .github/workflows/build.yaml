@@ -19,7 +19,11 @@ jobs:
           python-version: '3.8'
       - name: Get dateutil
         run: pip install python-dateutil
+      - name: Get requests
+        run: python -m pip install requests
       - name: Update README file
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: python today.py
       - name: Commit
         run: |-
