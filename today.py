@@ -40,7 +40,7 @@ def svg_overwrite(filename):
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
     tspan[30].firstChild.data = daily_readme()
-    tspan[66].firstChild.data = commit_counter(now)
+    tspan[66].firstChild.data = f'{commit_counter(now): <12}'
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
