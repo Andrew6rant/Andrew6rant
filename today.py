@@ -11,7 +11,7 @@ def daily_readme():
     birth = datetime.datetime(2002, 7, 5)
     now = datetime.datetime.today()
     diff = relativedelta.relativedelta(now, birth)
-    
+
     return '{} {}, {} {}, {} {}'.format(diff.years, 'year' + format_plural(diff.years), diff.months, 'month' + format_plural(diff.months), diff.days, 'day' + format_plural(diff.days))
 
 
@@ -40,12 +40,50 @@ def graph_commits(start_date, end_date):
     return 0
 
 
+def graph_repos_stars(count_type):
+    # this is separate from graph_commits, because graph_commits queries multiple times
+    query = '''
+    {
+    user(login: "Andrew6rant") {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+            totalCount
+            edges {
+                node {
+                    ... on Repository {
+                        stargazers {
+                            totalCount
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }'''
+    headers = {'authorization': 'token '+ ACCESS_TOKEN}
+    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        if count_type == "repos":
+            return request.json()['data']['user']['repositories']['totalCount']
+        else:
+            return stars_counter(request.json()['data']['user']['repositories']['edges'])
+    return 0
+
+
+def stars_counter(data):
+    total_stars = 0
+    for node in data:
+        total_stars += node['node']['stargazers']['totalCount']
+    return total_stars
+
+
 def svg_overwrite(filename):
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
     tspan[30].firstChild.data = daily_readme()
     tspan[66].firstChild.data = f'{commit_counter(datetime.datetime.today()): <12}'
+    tspan[68].firstChild.data = graph_repos_stars("stars")
+    tspan[70].firstChild.data = f'{graph_repos_stars("repos"): <7}'
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
