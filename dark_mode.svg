@@ -56,7 +56,7 @@ text, tspan {white-space: pre;}
 <tspan x="320" y="410" class="keyColor">LinkedIn</tspan>: <tspan class="valueColor">Andrew6rant</tspan>
 <tspan x="320" y="450" class="keyColor">GitHub Stats</tspan>: <tspan class="commentColor"># WIP, will be fully automated later</tspan>
 <tspan x="320" y="470">——————</tspan>
-<tspan x="320" y="490" class="keyColor">Commits</tspan>: <tspan class="valueColor">899         </tspan> │ <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">28</tspan>
+<tspan x="320" y="490" class="keyColor">Commits</tspan>: <tspan class="valueColor">900         </tspan> │ <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">29</tspan>
 <tspan x="320" y="510" class="keyColor">Repositories</tspan>: <tspan class="valueColor">43     </tspan> │ <tspan class="keyColor">Lines Written</tspan>: <tspan class="valueColor">455,092</tspan>
 </text>
 
