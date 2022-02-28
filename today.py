@@ -8,20 +8,32 @@ ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
 
 def daily_readme():
+    """
+    Returns the number of days since I was born
+    """
     birth = datetime.datetime(2002, 7, 5)
-    now = datetime.datetime.today()
-    diff = relativedelta.relativedelta(now, birth)
-
+    diff = relativedelta.relativedelta(datetime.datetime.today(), birth)
     return '{} {}, {} {}, {} {}'.format(diff.years, 'year' + format_plural(diff.years), diff.months, 'month' + format_plural(diff.months), diff.days, 'day' + format_plural(diff.days))
 
 
 def format_plural(unit):
+    """
+    Returns a properly formatted number
+    e.g.
+    'day' + format_plural(diff.days) == 5
+    >>> '5 days'
+    'day' + format_plural(diff.days) == 1
+    >>> '1 day'
+    """
     if unit != 1:
         return 's'
     return ''
 
 
 def graph_commits(start_date, end_date):
+    """
+    Uses GitHub's GraphQL v4 API to return my total commit count
+    """
     query = '''
     query($start_date: DateTime!, $end_date: DateTime!) {
         user(login: "Andrew6rant") {
@@ -41,7 +53,10 @@ def graph_commits(start_date, end_date):
 
 
 def graph_repos_stars(count_type):
-    # this is separate from graph_commits, because graph_commits queries multiple times
+    """
+    Uses GitHub's GraphQL v4 API to return my total repository count, or a dictionary of the number of stars in each of my repositories
+    This is a separate function from graph_commits, because graph_commits queries multiple times and this only needs to be ran once
+    """
     query = '''
     {
     user(login: "Andrew6rant") {
@@ -70,6 +85,9 @@ def graph_repos_stars(count_type):
 
 
 def stars_counter(data):
+    """
+    Count total stars in my repositories
+    """
     total_stars = 0
     for node in data:
         total_stars += node['node']['stargazers']['totalCount']
@@ -77,6 +95,9 @@ def stars_counter(data):
 
 
 def svg_overwrite(filename):
+    """
+    Parse SVG file and update elements with my age, commits, and stars
+    """
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
@@ -88,6 +109,10 @@ def svg_overwrite(filename):
 
 
 def commit_counter(date):
+    """
+    Counts up my total commits.
+    Loops commits per year (starting backwards from today, continuing until my account's creation date)
+    """
     total_commits = 0
     # since GraphQL's contributionsCollection has a maximum reach of one year
     while date.isoformat() > "2019-11-02T00:00:00.000Z": # one day before my very first commit
@@ -98,5 +123,8 @@ def commit_counter(date):
 
 
 if __name__ == '__main__':
+    """
+    Runs program over each SVG image
+    """
     svg_overwrite("dark_mode.svg")
     svg_overwrite("light_mode.svg")
