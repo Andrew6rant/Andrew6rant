@@ -24,6 +24,7 @@ jobs:
       - name: Update README file
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          OWNER_ID: ${{ secrets.OWNER_ID }}
         run: python today.py
       - name: Commit
         run: |-
