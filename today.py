@@ -1,4 +1,3 @@
-import config
 import datetime
 from dateutil import relativedelta
 import requests
@@ -6,6 +5,7 @@ import os
 from xml.dom import minidom
 
 try: # This should run locally
+    import config
     ACCESS_TOKEN = config.ACCESS_TOKEN
     OWNER_ID = config.OWNER_ID
 except: # This should run on GitHub Actions
