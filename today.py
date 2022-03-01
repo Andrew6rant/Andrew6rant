@@ -89,9 +89,70 @@ def graph_repos_stars(count_type, owner_affiliation):
     if request.status_code == 200:
         if count_type == "repos":
             return request.json()['data']['user']['repositories']['totalCount']
-        else:
+        elif count_type == "stars":
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
+        else:
+            return all_repo_names(request.json()['data']['user']['repositories']['edges'])
     return 0
+
+
+def all_repo_names(data):
+    """
+    Returns the names of repos I have contributed to
+    """
+    total_loc = 0
+    for node in data:
+        name_with_owner = node['node']['nameWithOwner'].split('/')
+        repo_name = name_with_owner[1]
+        owner = name_with_owner[0]
+        total_loc += graph_loc(owner, repo_name)
+    return total_loc
+
+
+def graph_loc(owner, repo_name, addition_total=0, cursor=None):
+    query = '''
+    query ($repo_name: String!, $owner: String!, $cursor: String) {
+        repository(name: $repo_name, owner: $owner) {
+            defaultBranchRef {
+                target {
+                    ... on Commit {
+                        history(first: 100, after: $cursor) {
+                            totalCount
+                            edges {
+                                node {
+                                    ... on Commit {
+                                        committedDate
+                                    }
+                                    author {
+                                        user {
+                                            id
+                                        }
+                                    }
+                                    deletions
+                                    additions
+                                }
+                                cursor
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }'''
+    variables = {"repo_name": repo_name, "owner": owner, "cursor": cursor}
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    if request.status_code == 200:
+        return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, cursor)
+
+
+def loc_counter_one_repo(owner, repo_name, edges, addition_total, cursor=None, new_cursor="0"):
+    if edges == []:
+        return addition_total
+    for node in edges:
+        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the end
+        if node['node']['author']['user'] == {'id': OWNER_ID}:
+            addition_total += node['node']['additions']
+    return graph_loc(owner, repo_name, addition_total, new_cursor)
 
 
 def stars_counter(data):
@@ -104,7 +165,7 @@ def stars_counter(data):
     return total_stars
 
 
-def svg_overwrite(filename, age_data, commit_data, star_data, repo_data):
+def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, total_loc):
     """
     Parse SVG files and update elements with my age, commits, and stars
     """
@@ -115,6 +176,7 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data):
     tspan[66].firstChild.data = commit_data
     tspan[68].firstChild.data = star_data
     tspan[70].firstChild.data = repo_data
+    tspan[72].firstChild.data = total_loc
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
@@ -140,6 +202,7 @@ if __name__ == '__main__':
     commit_data = f'{commit_counter(datetime.datetime.today()): <12}'
     star_data = graph_repos_stars("stars", ["OWNER"])
     repo_data = f'{graph_repos_stars("repos", ["OWNER"]): <7}'
+    total_loc = "{:,}".format(graph_repos_stars("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"]))
 
-    svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data)
-    svg_overwrite("light_mode.svg", age_data, commit_data, star_data, repo_data)
+    svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data, total_loc)
+    svg_overwrite("light_mode.svg", age_data, commit_data, star_data, repo_data, total_loc)
