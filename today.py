@@ -173,10 +173,10 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, total_l
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
     tspan[30].firstChild.data = age_data
-    tspan[66].firstChild.data = commit_data
-    tspan[68].firstChild.data = star_data
-    tspan[70].firstChild.data = repo_data
-    tspan[72].firstChild.data = total_loc
+    tspan[65].firstChild.data = commit_data
+    tspan[67].firstChild.data = star_data
+    tspan[69].firstChild.data = repo_data
+    tspan[71].firstChild.data = total_loc
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
