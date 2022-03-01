@@ -55,7 +55,7 @@ def graph_commits(start_date, end_date):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
-    return 0
+    raise Exception("the request has failed, graph_commits()")
 
 
 def graph_repos_stars(count_type, owner_affiliation):
@@ -89,11 +89,9 @@ def graph_repos_stars(count_type, owner_affiliation):
     if request.status_code == 200:
         if count_type == "repos":
             return request.json()['data']['user']['repositories']['totalCount']
-        elif count_type == "stars":
-            return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
             return all_repo_names(request.json()['data']['user']['repositories']['edges'])
-    return 0
+    raise Exception("the request has failed, graph_repos_stars()")
 
 
 def all_repo_names(data):
@@ -143,6 +141,8 @@ def graph_loc(owner, repo_name, addition_total=0, cursor=None):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, cursor)
+    else:
+        raise Exception("the request has failed, graph_loc()")
 
 
 def loc_counter_one_repo(owner, repo_name, edges, addition_total, cursor=None, new_cursor="0"):
