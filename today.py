@@ -104,17 +104,17 @@ def stars_counter(data):
     return total_stars
 
 
-def svg_overwrite(filename):
+def svg_overwrite(filename, age_data, commit_data, star_data, repo_data):
     """
-    Parse SVG file and update elements with my age, commits, and stars
+    Parse SVG files and update elements with my age, commits, and stars
     """
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
     tspan = svg.getElementsByTagName('tspan')
-    tspan[30].firstChild.data = daily_readme()
-    tspan[66].firstChild.data = f'{commit_counter(datetime.datetime.today()): <12}'
-    tspan[68].firstChild.data = graph_repos_stars("stars", ["OWNER"])
-    tspan[70].firstChild.data = f'{graph_repos_stars("repos", ["OWNER"]): <7}'
+    tspan[30].firstChild.data = age_data
+    tspan[66].firstChild.data = commit_data
+    tspan[68].firstChild.data = star_data
+    tspan[70].firstChild.data = repo_data
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
@@ -136,5 +136,10 @@ if __name__ == '__main__':
     """
     Runs program over each SVG image
     """
-    svg_overwrite("dark_mode.svg")
-    svg_overwrite("light_mode.svg")
+    age_data = daily_readme()
+    commit_data = f'{commit_counter(datetime.datetime.today()): <12}'
+    star_data = graph_repos_stars("stars", ["OWNER"])
+    repo_data = f'{graph_repos_stars("repos", ["OWNER"]): <7}'
+
+    svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data)
+    svg_overwrite("light_mode.svg", age_data, commit_data, star_data, repo_data)
