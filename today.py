@@ -89,6 +89,8 @@ def graph_repos_stars(count_type, owner_affiliation):
     if request.status_code == 200:
         if count_type == "repos":
             return request.json()['data']['user']['repositories']['totalCount']
+        elif count_type == "stars":
+            return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
             return all_repo_names(request.json()['data']['user']['repositories']['edges'])
     raise Exception("the request has failed, graph_repos_stars()")
