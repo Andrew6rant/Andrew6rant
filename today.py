@@ -16,7 +16,8 @@ HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
 
 def daily_readme():
     """
-    Returns the number of days since I was born
+    Returns the length of time since I was born
+    e.g. 'XX years, XX months, XX days'
     """
     birth = datetime.datetime(2002, 7, 5)
     diff = relativedelta.relativedelta(datetime.datetime.today(), birth)
@@ -58,10 +59,11 @@ def graph_commits(start_date, end_date):
     raise Exception("the request has failed, graph_commits()")
 
 
-def graph_repos_stars(count_type, owner_affiliation):
+def graph_repos_stars_loc(count_type, owner_affiliation):
     """
-    Uses GitHub's GraphQL v4 API to return my total repository count, or a dictionary of the number of stars in each of my repositories
-    This is a separate function from graph_commits, because graph_commits queries multiple times and this only needs to be ran once
+    Uses GitHub's GraphQL v4 API to return my total repository, star, or lines of code count.
+    This is a separate function from graph_commits, because graph_commits queries -(-x // 100) times (where x is my total commit count),
+    and this runs once (per call, and it is called thrice)
     """
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation]) {
@@ -98,18 +100,22 @@ def graph_repos_stars(count_type, owner_affiliation):
 
 def all_repo_names(data):
     """
-    Returns the names of repos I have contributed to
+    Returns the total number of lines of code written by my account
     """
     total_loc = 0
     for node in data:
         name_with_owner = node['node']['nameWithOwner'].split('/')
         repo_name = name_with_owner[1]
         owner = name_with_owner[0]
-        total_loc += graph_loc(owner, repo_name)
+        total_loc += query_loc(owner, repo_name)
     return total_loc
 
 
-def graph_loc(owner, repo_name, addition_total=0, cursor=None):
+def query_loc(owner, repo_name, addition_total=0, cursor=None):
+    """
+    Uses GitHub's GraphQL v4 API to fetch 100 commits at a time
+    This is a separate function from graph_commits and graph_repos_stars_loc, because this is called hundreds of times
+    """
     query = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
@@ -144,22 +150,26 @@ def graph_loc(owner, repo_name, addition_total=0, cursor=None):
     if request.status_code == 200:
         return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, cursor)
     else:
-        raise Exception("the request has failed, graph_loc()")
+        raise Exception("the request has failed, query_loc()")
 
 
 def loc_counter_one_repo(owner, repo_name, edges, addition_total, cursor=None, new_cursor="0"):
-    if edges == []:
+    """
+    Recursively call query_loc (since GraphQL can only search 100 commits at a time) 
+    only adds the LOC value of commits authored by me
+    """
+    if edges == []: # beginning of commit history
         return addition_total
     for node in edges:
-        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the end
+        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
         if node['node']['author']['user'] == {'id': OWNER_ID}:
             addition_total += node['node']['additions']
-    return graph_loc(owner, repo_name, addition_total, new_cursor)
+    return query_loc(owner, repo_name, addition_total, new_cursor)
 
 
 def stars_counter(data):
     """
-    Count total stars in my repositories
+    Count total stars in repositories owned by me
     """
     total_stars = 0
     for node in data:
@@ -169,7 +179,7 @@ def stars_counter(data):
 
 def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, total_loc):
     """
-    Parse SVG files and update elements with my age, commits, and stars
+    Parse SVG files and update elements with my age, commits, stars, repositories, and lines written
     """
     svg = minidom.parse(filename)
     f = open(filename, mode='w', encoding='utf-8')
@@ -202,9 +212,9 @@ if __name__ == '__main__':
     """
     age_data = daily_readme()
     commit_data = f'{commit_counter(datetime.datetime.today()): <12}'
-    star_data = graph_repos_stars("stars", ["OWNER"])
-    repo_data = f'{graph_repos_stars("repos", ["OWNER"]): <7}'
-    total_loc = "{:,}".format(graph_repos_stars("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"]))
+    star_data = graph_repos_stars_loc("stars", ["OWNER"])
+    repo_data = f'{graph_repos_stars_loc("repos", ["OWNER"]): <7}'
+    total_loc = "{:,}".format(graph_repos_stars_loc("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"]))
 
     svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data, total_loc)
     svg_overwrite("light_mode.svg", age_data, commit_data, star_data, repo_data, total_loc)
