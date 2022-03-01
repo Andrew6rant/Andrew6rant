@@ -5,6 +5,8 @@ import os
 from xml.dom import minidom
 
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
+OWNER_ID = os.environ['OWNER_ID']
 
 
 def daily_readme():
@@ -45,28 +47,31 @@ def graph_commits(start_date, end_date):
         }
     }'''
     variables = {'start_date': start_date,'end_date': end_date}
-    headers = {'authorization': 'token '+ ACCESS_TOKEN}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=headers)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
     return 0
 
 
-def graph_repos_stars(count_type):
+def graph_repos_stars(count_type, owner_affiliation):
     """
     Uses GitHub's GraphQL v4 API to return my total repository count, or a dictionary of the number of stars in each of my repositories
     This is a separate function from graph_commits, because graph_commits queries multiple times and this only needs to be ran once
     """
     query = '''
-    {
-    user(login: "Andrew6rant") {
-        repositories(first: 100, ownerAffiliations: OWNER) {
-            totalCount
-            edges {
-                node {
-                    ... on Repository {
-                        stargazers {
-                            totalCount
+    query ($owner_affiliation: [RepositoryAffiliation]) {
+        user(login: "Andrew6rant") {
+            repositories(first: 100, ownerAffiliations: $owner_affiliation) {
+                totalCount
+                edges {
+                    node {
+                        ... on Repository {
+                            nameWithOwner
+                            stargazers {
+                                totalCount
+                            }
+                            owner {
+                                id
                             }
                         }
                     }
@@ -74,8 +79,8 @@ def graph_repos_stars(count_type):
             }
         }
     }'''
-    headers = {'authorization': 'token '+ ACCESS_TOKEN}
-    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    variables = {'owner_affiliation': owner_affiliation}
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if count_type == "repos":
             return request.json()['data']['user']['repositories']['totalCount']
@@ -103,8 +108,8 @@ def svg_overwrite(filename):
     tspan = svg.getElementsByTagName('tspan')
     tspan[30].firstChild.data = daily_readme()
     tspan[66].firstChild.data = f'{commit_counter(datetime.datetime.today()): <12}'
-    tspan[68].firstChild.data = graph_repos_stars("stars")
-    tspan[70].firstChild.data = f'{graph_repos_stars("repos"): <7}'
+    tspan[68].firstChild.data = graph_repos_stars("stars", ["OWNER"])
+    tspan[70].firstChild.data = f'{graph_repos_stars("repos", ["OWNER"]): <7}'
     f.write(svg.toxml("utf-8").decode("utf-8"))
 
 
