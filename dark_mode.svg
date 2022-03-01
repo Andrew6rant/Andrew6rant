@@ -57,7 +57,7 @@ text, tspan {white-space: pre;}
 <tspan x="320" y="450" class="keyColor">GitHub Stats</tspan>: <tspan class="commentColor"> </tspan>
 <tspan x="320" y="470">——————</tspan>
 <tspan x="320" y="490" class="keyColor">Commits</tspan>: <tspan class="valueColor">919         </tspan> │ <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">30</tspan>
-<tspan x="320" y="510" class="keyColor">Repositories</tspan>: <tspan class="valueColor">43     </tspan> │ <tspan class="keyColor">Lines Written</tspan>: <tspan class="valueColor">455,092</tspan>
+<tspan x="320" y="510" class="keyColor">Repositories</tspan>: <tspan class="valueColor">42     </tspan> │ <tspan class="keyColor">Lines Written</tspan>: <tspan class="valueColor">0</tspan>
 </text>
 
 </svg>
