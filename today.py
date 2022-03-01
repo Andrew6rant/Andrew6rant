@@ -1,12 +1,17 @@
+import config
 import datetime
 from dateutil import relativedelta
 import requests
 import os
 from xml.dom import minidom
 
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+try: # This should run locally
+    ACCESS_TOKEN = config.ACCESS_TOKEN
+    OWNER_ID = config.OWNER_ID
+except: # This should run on GitHub Actions
+    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+    OWNER_ID = os.environ['OWNER_ID']
 HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
-OWNER_ID = os.environ['OWNER_ID']
 
 
 def daily_readme():
