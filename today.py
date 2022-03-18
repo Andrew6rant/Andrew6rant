@@ -148,7 +148,10 @@ def query_loc(owner, repo_name, addition_total=0, cursor=None):
     variables = {"repo_name": repo_name, "owner": owner, "cursor": cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
-        return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, cursor)
+        if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
+            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, cursor)
+        else:
+            return 0
     else:
         raise Exception("the request has failed, query_loc()")
 
