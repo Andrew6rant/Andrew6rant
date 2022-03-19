@@ -8,9 +8,13 @@ try: # This should run locally
     import config
     ACCESS_TOKEN = config.ACCESS_TOKEN
     OWNER_ID = config.OWNER_ID
+    USER_NAME = config.USER_NAME
+
 except: # This should run on GitHub Actions
     ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
     OWNER_ID = os.environ['OWNER_ID']
+    USER_NAME = os.environ['USER_NAME']
+
 HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
 
 
@@ -43,8 +47,8 @@ def graph_commits(start_date, end_date):
     Uses GitHub's GraphQL v4 API to return my total commit count
     """
     query = '''
-    query($start_date: DateTime!, $end_date: DateTime!) {
-        user(login: "Andrew6rant") {
+    query($start_date: DateTime!, $end_date: DateTime!, $login: String!) {
+        user(login: $login) {
             contributionsCollection(from: $start_date, to: $end_date) {
                 contributionCalendar {
                     totalContributions
@@ -52,7 +56,7 @@ def graph_commits(start_date, end_date):
             }
         }
     }'''
-    variables = {'start_date': start_date,'end_date': end_date}
+    variables = {'start_date': start_date,'end_date': end_date, 'login': USER_NAME}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
@@ -66,8 +70,8 @@ def graph_repos_stars_loc(count_type, owner_affiliation):
     and this runs once (per call, and it is called thrice)
     """
     query = '''
-    query ($owner_affiliation: [RepositoryAffiliation]) {
-        user(login: "Andrew6rant") {
+    query ($owner_affiliation: [RepositoryAffiliation], $login: String!) {
+        user(login: $login) {
             repositories(first: 100, ownerAffiliations: $owner_affiliation) {
                 totalCount
                 edges {
@@ -86,7 +90,7 @@ def graph_repos_stars_loc(count_type, owner_affiliation):
             }
         }
     }'''
-    variables = {'owner_affiliation': owner_affiliation}
+    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if count_type == "repos":
