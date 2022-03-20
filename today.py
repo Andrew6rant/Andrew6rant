@@ -6,15 +6,14 @@ from xml.dom import minidom
 
 try: # This should run locally
     import config
-    ACCESS_TOKEN = config.ACCESS_TOKEN
-    OWNER_ID = config.OWNER_ID
-    USER_NAME = config.USER_NAME
+    ACCESS_TOKEN = config.ACCESS_TOKEN # Personal access token (repo, read:user)
+    USER_NAME = config.USER_NAME # 'Andrew6rant'
 
 except: # This should run on GitHub Actions
     ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-    OWNER_ID = os.environ['OWNER_ID']
     USER_NAME = os.environ['USER_NAME']
 
+# OWNER_ID is declared in main()
 HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
 
 
@@ -158,11 +157,10 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
-            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], addition_total, deletion_total, cursor)
-        else:
-            return 0
-    else:
-        raise Exception("the request has failed, query_loc()")
+            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], 
+                addition_total, deletion_total, cursor)
+        else: return 0
+    raise Exception("the request has failed, query_loc()")
 
 
 def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total, cursor=None, new_cursor="0"):
@@ -174,7 +172,7 @@ def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total
         return addition_total, deletion_total
     for node in edges:
         new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
-        if node['node']['author']['user'] == {'id': OWNER_ID}:
+        if node['node']['author']['user'] == OWNER_ID:
             addition_total += node['node']['additions']
             deletion_total += node['node']['deletions']
     return query_loc(owner, repo_name, addition_total, deletion_total, new_cursor)
@@ -185,8 +183,7 @@ def stars_counter(data):
     Count total stars in repositories owned by me
     """
     total_stars = 0
-    for node in data:
-        total_stars += node['node']['stargazers']['totalCount']
+    for node in data: total_stars += node['node']['stargazers']['totalCount']
     return total_stars
 
 
@@ -230,17 +227,39 @@ def svg_element_getter(filename):
     tspan = svg.getElementsByTagName('tspan')
     for index in range(len(tspan)): print(index, tspan[index].firstChild.data)
 
+
+def user_id_getter(username):
+    """
+    Returns the account ID of the username
+    """
+    query = '''
+    query($login: String!){
+        user(login: $login) {
+            id
+        }
+    }'''
+    variables = {"login": username}
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    if request.status_code == 200:
+        return {'id': request.json()['data']['user']['id']}
+    raise Exception("the request has failed, user_id_getter()")
+
+
 if __name__ == '__main__':
     """
     Runs program over each SVG image
     """
+    # define global variable for owner ID
+    # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
+    OWNER_ID = user_id_getter(USER_NAME)
+
     age_data = daily_readme()
     # f' for whitespace, "{;,}" for commas
     commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
     star_data = "{:,}".format(graph_repos_stars_loc("stars", ["OWNER"]))
     repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <6}'
     total_loc = graph_repos_stars_loc("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])
-    
+
     for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
 
     svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data, total_loc)
