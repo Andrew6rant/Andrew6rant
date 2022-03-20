@@ -65,16 +65,14 @@ def graph_commits(start_date, end_date):
     raise Exception("the request has failed, graph_commits()")
 
 
-def graph_repos_stars_loc(count_type, owner_affiliation):
+def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
     """
     Uses GitHub's GraphQL v4 API to return my total repository, star, or lines of code count.
-    This is a separate function from graph_commits, because graph_commits queries -(-x // 100) times (where x is my total commit count),
-    and this runs once (per call, and it is called thrice)
     """
     query = '''
-    query ($owner_affiliation: [RepositoryAffiliation], $login: String!) {
+    query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
-            repositories(first: 100, ownerAffiliations: $owner_affiliation) {
+            repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
                 totalCount
                 edges {
                     node {
@@ -88,11 +86,12 @@ def graph_repos_stars_loc(count_type, owner_affiliation):
                             }
                         }
                     }
+                    cursor
                 }
             }
         }
     }'''
-    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME}
+    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, "cursor": cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if count_type == "repos":
@@ -100,23 +99,26 @@ def graph_repos_stars_loc(count_type, owner_affiliation):
         elif count_type == "stars":
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
-            return all_repo_names(request.json()['data']['user']['repositories']['edges'])
+            return all_repo_names(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
     raise Exception("the request has failed, graph_repos_stars()")
 
 
-def all_repo_names(data):
+def all_repo_names(edges, add_loc=0, del_loc=0):
     """
     Returns the total number of lines of code written by my account
     """
-    add_loc, del_loc = 0, 0
-    for node in data:
+    if edges == []: # end of repo list
+        total_loc = add_loc - del_loc
+        return [add_loc, del_loc, total_loc]
+    for node in edges:
+        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
         name_with_owner = node['node']['nameWithOwner'].split('/')
         repo_name = name_with_owner[1]
         owner = name_with_owner[0]
-        add_loc += query_loc(owner, repo_name)[0]
-        del_loc += query_loc(owner, repo_name)[1]
-    total_loc = add_loc - del_loc
-    return [add_loc, del_loc, total_loc]
+        loc = query_loc(owner, repo_name)
+        add_loc += loc[0]
+        del_loc += loc[1]
+    return graph_repos_stars_loc("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"], new_cursor, add_loc, del_loc)
 
 
 def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None):
