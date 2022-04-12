@@ -3,6 +3,9 @@ from dateutil import relativedelta
 import requests
 import os
 from xml.dom import minidom
+import time
+import multiprocessing
+
 
 try: # This should run locally
     import config
@@ -62,7 +65,7 @@ def graph_commits(start_date, end_date):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
-    raise Exception("the request has failed, graph_commits()")
+    raise Exception('The request has failed, graph_commits()')
 
 
 def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
@@ -91,34 +94,39 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
             }
         }
     }'''
-    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, "cursor": cursor}
+    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
-        if count_type == "repos":
+        if count_type == 'repos':
             return request.json()['data']['user']['repositories']['totalCount']
-        elif count_type == "stars":
+        elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
-            return all_repo_names(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
-    raise Exception("the request has failed, graph_repos_stars()")
+            return all_repo_names_multiprocessing(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
+            # return all_repo_names(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
+    raise Exception('The request has failed, graph_repos_stars()')
 
 
-def all_repo_names(edges, add_loc=0, del_loc=0):
+def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
     """
     Returns the total number of lines of code written by my account
     """
     if edges == []: # end of repo list
         total_loc = add_loc - del_loc
         return [add_loc, del_loc, total_loc]
+    pool = multiprocessing.Pool(multiprocessing.cpu_count()) # 12 on my machine
     for node in edges:
         new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
         name_with_owner = node['node']['nameWithOwner'].split('/')
-        repo_name = name_with_owner[1]
-        owner = name_with_owner[0]
-        loc = query_loc(owner, repo_name)
-        add_loc += loc[0]
-        del_loc += loc[1]
-    return graph_repos_stars_loc("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"], new_cursor, add_loc, del_loc)
+        owner, repo_name = name_with_owner
+        # loc = multiprocessing.Process(target=query_loc, args=[owner, repo_name])
+        # loc.start()
+        # process_list.append(loc)
+        # # loc = query_loc(owner, repo_name)
+        loc = pool.apply_async(query_loc, args=[owner, repo_name])
+        add_loc += loc.get()[0]
+        del_loc += loc.get()[1]
+    return graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], new_cursor, add_loc, del_loc)
 
 
 def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None):
@@ -155,17 +163,17 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
             }
         }
     }'''
-    variables = {"repo_name": repo_name, "owner": owner, "cursor": cursor}
+    variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], 
                 addition_total, deletion_total, cursor)
         else: return 0
-    raise Exception("the request has failed, query_loc()")
+    raise Exception('The request has failed, query_loc()')
 
 
-def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total, cursor=None, new_cursor="0"):
+def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total, cursor=None, new_cursor='0'):
     """
     Recursively call query_loc (since GraphQL can only search 100 commits at a time) 
     only adds the LOC value of commits authored by me
@@ -174,7 +182,7 @@ def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total
         return addition_total, deletion_total
     for node in edges:
         new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
-        if node['node']['author']['user'] == OWNER_ID:
+        if node['node']['author']['user'] == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}:
             addition_total += node['node']['additions']
             deletion_total += node['node']['deletions']
     return query_loc(owner, repo_name, addition_total, deletion_total, new_cursor)
@@ -202,9 +210,9 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
     tspan[69].firstChild.data = commit_data
     tspan[71].firstChild.data = star_data
     tspan[73].firstChild.data = loc_data[2]
-    tspan[74].firstChild.data = loc_data[0] + "++"
-    tspan[75].firstChild.data = loc_data[1] + "--"
-    f.write(svg.toxml("utf-8").decode("utf-8"))
+    tspan[74].firstChild.data = loc_data[0] + '++'
+    tspan[75].firstChild.data = loc_data[1] + '--'
+    f.write(svg.toxml('utf-8').decode('utf-8'))
 
 
 def commit_counter(date):
@@ -214,7 +222,7 @@ def commit_counter(date):
     """
     total_commits = 0
     # since GraphQL's contributionsCollection has a maximum reach of one year
-    while date.isoformat() > "2019-11-02T00:00:00.000Z": # one day before my very first commit
+    while date.isoformat() > '2019-11-02T00:00:00.000Z': # one day before my very first commit
         old_date = date.isoformat()
         date = date - datetime.timedelta(days=365)
         total_commits += graph_commits(date.isoformat(), old_date)
@@ -241,11 +249,11 @@ def user_id_getter(username):
             id
         }
     }'''
-    variables = {"login": username}
+    variables = {'login': username}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return {'id': request.json()['data']['user']['id']}
-    raise Exception("the request has failed, user_id_getter()")
+    raise Exception('The request has failed, user_id_getter()')
 
 
 if __name__ == '__main__':
@@ -254,18 +262,41 @@ if __name__ == '__main__':
     """
     # define global variable for owner ID
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    OWNER_ID = user_id_getter(USER_NAME)
+    # start_id = time.perf_counter()
+    # OWNER_ID = user_id_getter(USER_NAME)
+    # print(OWNER_ID)
+    # difference_id = time.perf_counter() - start_id
+    # print('ID fetching time:', difference_id)
 
+    # start_age = time.perf_counter()
     age_data = daily_readme()
+    # difference_age = time.perf_counter() - start_age
+    # print('Age fetching time:', difference_age)
+
     # f' for whitespace, "{;,}" for commas
+    # start_commit = time.perf_counter()
     commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
-    star_data = "{:,}".format(graph_repos_stars_loc("stars", ["OWNER"]))
+    # difference_commit = time.perf_counter() - start_commit
+    # print('Commit fetching time:', difference_commit)
+    # start_star = time.perf_counter()
+    star_data = "{:,}".format(graph_repos_stars_loc('stars', ['OWNER']))
+    # difference_star = time.perf_counter() - start_star
+    # print('Star fetching time:', difference_star)
+    # start_repo = time.perf_counter()
     repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <2}'
+    # difference_repo = time.perf_counter() - start_repo
+    # print('Repo fetching time:', difference_repo)
+    # start_contrib = time.perf_counter()
     contrib_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
-    total_loc = graph_repos_stars_loc("LOC", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])
+    # difference_contrib = time.perf_counter() - start_contrib
+    # print('Contrib fetching time:', difference_contrib)
+    # start_loc = time.perf_counter()
+    total_loc = graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    # difference_loc = time.perf_counter() - start_loc
+    # print('LOC fetching time:', difference_loc)
 
     for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
 
-    svg_overwrite("dark_mode.svg", age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
-    svg_overwrite("light_mode.svg", age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
+    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
+    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     
