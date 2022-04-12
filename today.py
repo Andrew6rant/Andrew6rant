@@ -4,6 +4,7 @@ import requests
 import os
 from xml.dom import minidom
 import multiprocessing
+import time
 
 
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN'] # Personal access token with permissions: (repo, read:user)
@@ -106,13 +107,18 @@ def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
         total_loc = add_loc - del_loc
         return [add_loc, del_loc, total_loc]
     pool = multiprocessing.Pool(multiprocessing.cpu_count()) # 12 on my machine
-    for node in edges:
-        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
-        name_with_owner = node['node']['nameWithOwner'].split('/')
+    pool_list = []
+    for index in range(len(edges)):
+        new_cursor = edges[index]['cursor'] # redefine cursor over and over again until it reaches the last node in the call
+        name_with_owner = edges[index]['node']['nameWithOwner'].split('/')
         owner, repo_name = name_with_owner
         loc = pool.apply_async(query_loc, args=[owner, repo_name])
-        add_loc += loc.get()[0]
-        del_loc += loc.get()[1]
+        pool_list.append(loc)
+        time.sleep(0.1) # prevent rate limit
+    for index in range(len(edges)):
+        both_loc = pool_list[index].get()
+        add_loc += both_loc[0]
+        del_loc += both_loc[1]
     return graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], new_cursor, add_loc, del_loc)
 
 
@@ -157,6 +163,9 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
             return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], 
                 addition_total, deletion_total, cursor)
         else: return 0
+    elif request.status_code == 403:
+        raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
+    print(request.status_code)
     raise Exception('The request has failed, query_loc()')
 
 
@@ -200,6 +209,7 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
     tspan[74].firstChild.data = loc_data[0] + '++'
     tspan[75].firstChild.data = loc_data[1] + '--'
     f.write(svg.toxml('utf-8').decode('utf-8'))
+    f.close()
 
 
 def commit_counter(date):
