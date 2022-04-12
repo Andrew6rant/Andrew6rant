@@ -3,7 +3,6 @@ from dateutil import relativedelta
 import requests
 import os
 from xml.dom import minidom
-import time
 import multiprocessing
 
 
@@ -119,10 +118,6 @@ def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
         new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
         name_with_owner = node['node']['nameWithOwner'].split('/')
         owner, repo_name = name_with_owner
-        # loc = multiprocessing.Process(target=query_loc, args=[owner, repo_name])
-        # loc.start()
-        # process_list.append(loc)
-        # # loc = query_loc(owner, repo_name)
         loc = pool.apply_async(query_loc, args=[owner, repo_name])
         add_loc += loc.get()[0]
         del_loc += loc.get()[1]
@@ -262,38 +257,14 @@ if __name__ == '__main__':
     """
     # define global variable for owner ID
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    # start_id = time.perf_counter()
     # OWNER_ID = user_id_getter(USER_NAME)
-    # print(OWNER_ID)
-    # difference_id = time.perf_counter() - start_id
-    # print('ID fetching time:', difference_id)
-
-    # start_age = time.perf_counter()
     age_data = daily_readme()
-    # difference_age = time.perf_counter() - start_age
-    # print('Age fetching time:', difference_age)
-
     # f' for whitespace, "{;,}" for commas
-    # start_commit = time.perf_counter()
     commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
-    # difference_commit = time.perf_counter() - start_commit
-    # print('Commit fetching time:', difference_commit)
-    # start_star = time.perf_counter()
     star_data = "{:,}".format(graph_repos_stars_loc('stars', ['OWNER']))
-    # difference_star = time.perf_counter() - start_star
-    # print('Star fetching time:', difference_star)
-    # start_repo = time.perf_counter()
     repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <2}'
-    # difference_repo = time.perf_counter() - start_repo
-    # print('Repo fetching time:', difference_repo)
-    # start_contrib = time.perf_counter()
     contrib_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
-    # difference_contrib = time.perf_counter() - start_contrib
-    # print('Contrib fetching time:', difference_contrib)
-    # start_loc = time.perf_counter()
     total_loc = graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
-    # difference_loc = time.perf_counter() - start_loc
-    # print('LOC fetching time:', difference_loc)
 
     for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
 
