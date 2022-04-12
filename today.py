@@ -6,16 +6,8 @@ from xml.dom import minidom
 import multiprocessing
 
 
-try: # This should run locally
-    import config
-    ACCESS_TOKEN = config.ACCESS_TOKEN # Personal access token (repo, read:user)
-    USER_NAME = config.USER_NAME # 'Andrew6rant'
-
-except: # This should run on GitHub Actions
-    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-    USER_NAME = os.environ['USER_NAME']
-
-# OWNER_ID is declared in main()
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN'] # Personal access token with permissions: (repo, read:user)
+USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
 HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
 
 
