@@ -114,11 +114,12 @@ def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
         owner, repo_name = name_with_owner
         loc = pool.apply_async(query_loc, args=[owner, repo_name])
         pool_list.append(loc)
-        time.sleep(0.1) # prevent rate limit
+        time.sleep(0.25) # prevent rate limit
     for index in range(len(edges)):
         both_loc = pool_list[index].get()
         add_loc += both_loc[0]
         del_loc += both_loc[1]
+        time.sleep(0.25) # prevent rate limit
     return graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], new_cursor, add_loc, del_loc)
 
 
@@ -257,19 +258,43 @@ if __name__ == '__main__':
     """
     Runs program over each SVG image
     """
-    # define global variable for owner ID
-    # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    # OWNER_ID = user_id_getter(USER_NAME)
+    # OWNER_ID temporarily hardcoded as multiprocessing cannot access global variable
+    #   define global variable for owner ID
+    #   e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
+    #   OWNER_ID = user_id_getter(USER_NAME)
+
+    start_age = time.perf_counter()
     age_data = daily_readme()
-    # f' for whitespace, "{;,}" for commas
-    commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
-    star_data = "{:,}".format(graph_repos_stars_loc('stars', ['OWNER']))
-    repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <2}'
-    contrib_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
+    difference_age = time.perf_counter() - start_age
+    print('Age fetching time:', difference_age)
+
+    start_loc = time.perf_counter()
     total_loc = graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    difference_loc = time.perf_counter() - start_loc
+    print('Loc fetching time:', difference_loc)
+
+    # f' for whitespace, "{;,}" for commas
+    start_commit = time.perf_counter()
+    commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
+    difference_commit = time.perf_counter() - start_commit
+    print('Commit fetching time:', difference_commit)
+
+    start_star = time.perf_counter()
+    star_data = "{:,}".format(graph_repos_stars_loc('stars', ['OWNER']))
+    difference_star = time.perf_counter() - start_star
+    print('Star fetching time:', difference_star)
+
+    start_repo = time.perf_counter()
+    repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <2}'
+    difference_repo = time.perf_counter() - start_repo
+    print('Repo fetching time:', difference_repo)
+
+    start_contrib = time.perf_counter()
+    contrib_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
+    difference_contrib = time.perf_counter() - start_contrib
+    print('Contrib fetching time:', difference_contrib)
 
     for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
 
     svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
-    
