@@ -5,11 +5,10 @@ import os
 from xml.dom import minidom
 import multiprocessing
 import time
+import random
 
-
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN'] # Personal access token with permissions: (repo, read:user)
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
-HEADERS = {'authorization': 'token '+ ACCESS_TOKEN}
+TOKENS = os.environ['TOKENS'].split(',') # Personal access tokens with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
 
 
 def daily_readme():
@@ -22,8 +21,7 @@ def daily_readme():
     return '{} {}, {} {}, {} {}'.format(
         diff.years, 'year' + format_plural(diff.years), 
         diff.months, 'month' + format_plural(diff.months), 
-        diff.days, 'day' + format_plural(diff.days)
-        )
+        diff.days, 'day' + format_plural(diff.days))
 
 
 def format_plural(unit):
@@ -54,7 +52,7 @@ def graph_commits(start_date, end_date):
         }
     }'''
     variables = {'start_date': start_date,'end_date': end_date, 'login': USER_NAME}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
     raise Exception('The request has failed, graph_commits()')
@@ -87,7 +85,7 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
     if request.status_code == 200:
         if count_type == 'repos':
             return request.json()['data']['user']['repositories']['totalCount']
@@ -114,7 +112,7 @@ def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
         owner, repo_name = name_with_owner
         loc = pool.apply_async(query_loc, args=[owner, repo_name])
         pool_list.append(loc)
-        time.sleep(0.25) # prevent rate limit
+        time.sleep(0.5) # prevent rate limit
     for index in range(len(edges)):
         both_loc = pool_list[index].get()
         add_loc += both_loc[0]
@@ -158,7 +156,7 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
         }
     }'''
     variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], 
@@ -248,13 +246,13 @@ def user_id_getter(username):
         }
     }'''
     variables = {'login': username}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
     if request.status_code == 200:
         return {'id': request.json()['data']['user']['id']}
     raise Exception('The request has failed, user_id_getter()')
 
 
-if __name__ == '__main__':
+def main():
     """
     Runs program over each SVG image
     """
@@ -298,3 +296,6 @@ if __name__ == '__main__':
 
     svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
+
+if __name__ == '__main__':
+    main()
