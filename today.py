@@ -41,6 +41,7 @@ def graph_commits(start_date, end_date):
     """
     Uses GitHub's GraphQL v4 API to return my total commit count
     """
+    print(graph_commits.__name__) # debug for each time GraphQL API is called
     query = '''
     query($start_date: DateTime!, $end_date: DateTime!, $login: String!) {
         user(login: $login) {
@@ -62,6 +63,7 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
     """
     Uses GitHub's GraphQL v4 API to return my total repository, star, or lines of code count.
     """
+    print(graph_repos_stars_loc.__name__, count_type) # debug for each time GraphQL API is called
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
@@ -79,7 +81,10 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
                             }
                         }
                     }
-                    cursor
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
                 }
             }
         }
@@ -92,40 +97,40 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
         elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
-            return all_repo_names_multiprocessing(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
-            # return all_repo_names(request.json()['data']['user']['repositories']['edges'], add_loc, del_loc)
+            return all_repo_names_multiprocessing(request.json()['data']['user']['repositories'], add_loc, del_loc)
     raise Exception('The request has failed, graph_repos_stars()')
 
 
-def all_repo_names_multiprocessing(edges, add_loc=0, del_loc=0):
+def all_repo_names_multiprocessing(repositories, add_loc=0, del_loc=0):
     """
     Returns the total number of lines of code written by my account
     """
-    if edges == []: # end of repo list
-        total_loc = add_loc - del_loc
-        return [add_loc, del_loc, total_loc]
     pool = multiprocessing.Pool(multiprocessing.cpu_count()) # 12 on my machine
     pool_list = []
-    for index in range(len(edges)):
-        new_cursor = edges[index]['cursor'] # redefine cursor over and over again until it reaches the last node in the call
-        name_with_owner = edges[index]['node']['nameWithOwner'].split('/')
+    for index in range(len(repositories['edges'])):
+        name_with_owner = repositories['edges'][index]['node']['nameWithOwner'].split('/')
         owner, repo_name = name_with_owner
         loc = pool.apply_async(query_loc, args=[owner, repo_name])
         pool_list.append(loc)
-        time.sleep(0.5) # prevent rate limit
-    for index in range(len(edges)):
+        time.sleep(0.4) # prevent rate limit
+    for index in range(len(repositories['edges'])):
         both_loc = pool_list[index].get()
         add_loc += both_loc[0]
         del_loc += both_loc[1]
         time.sleep(0.25) # prevent rate limit
-    return graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], new_cursor, add_loc, del_loc)
+
+    if repositories['edges'] == [] or not repositories['pageInfo']['hasNextPage']: # end of repo list
+        total_loc = add_loc - del_loc
+        return [add_loc, del_loc, total_loc]
+    else: return graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], repositories['pageInfo']['hasNextPage'], add_loc, del_loc)
 
 
 def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None):
     """
     Uses GitHub's GraphQL v4 API to fetch 100 commits at a time
-    This is a separate function from graph_commits and graph_repos_stars_loc, because this is called hundreds of times
+    This is a separate function from graph_commits and graph_repos_stars_loc, because this is called dozens of times
     """
+    print(query_loc.__name__) # debug for each time GraphQL API is called
     query = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
@@ -147,7 +152,10 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
                                     deletions
                                     additions
                                 }
-                                cursor
+                            }
+                            pageInfo {
+                                endCursor
+                                hasNextPage
                             }
                         }
                     }
@@ -159,8 +167,7 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
-            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history']['edges'], 
-                addition_total, deletion_total, cursor)
+            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total)
         else: return 0
     elif request.status_code == 403:
         raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
@@ -168,19 +175,19 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
     raise Exception('The request has failed, query_loc()')
 
 
-def loc_counter_one_repo(owner, repo_name, edges, addition_total, deletion_total, cursor=None, new_cursor='0'):
+def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_total):
     """
     Recursively call query_loc (since GraphQL can only search 100 commits at a time) 
     only adds the LOC value of commits authored by me
     """
-    if edges == []: # beginning of commit history
-        return addition_total, deletion_total
-    for node in edges:
-        new_cursor = node['cursor'] # redefine cursor over and over again until it reaches the last node in the call
+    for node in history['edges']:
         if node['node']['author']['user'] == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}:
             addition_total += node['node']['additions']
             deletion_total += node['node']['deletions']
-    return query_loc(owner, repo_name, addition_total, deletion_total, new_cursor)
+
+    if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
+        return addition_total, deletion_total
+    else: return query_loc(owner, repo_name, addition_total, deletion_total, history['pageInfo']['endCursor'])
 
 
 def stars_counter(data):
@@ -239,6 +246,7 @@ def user_id_getter(username):
     """
     Returns the account ID of the username
     """
+    print(user_id_getter.__name__) # debug for each time GraphQL API is called
     query = '''
     query($login: String!){
         user(login: $login) {
