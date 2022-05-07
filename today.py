@@ -3,20 +3,19 @@ from dateutil import relativedelta
 import requests
 import os
 from xml.dom import minidom
-import multiprocessing
 import time
-import random
 
+# Personal access token with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
+HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
-TOKENS = os.environ['TOKENS'].split(',') # Personal access tokens with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
+TOTAL_QUERIES = 0
 
 
-def daily_readme():
+def daily_readme(birth):
     """
     Returns the length of time since I was born
     e.g. 'XX years, XX months, XX days'
     """
-    birth = datetime.datetime(2002, 7, 5)
     diff = relativedelta.relativedelta(datetime.datetime.today(), birth)
     return '{} {}, {} {}, {} {}'.format(
         diff.years, 'year' + format_plural(diff.years), 
@@ -41,7 +40,7 @@ def graph_commits(start_date, end_date):
     """
     Uses GitHub's GraphQL v4 API to return my total commit count
     """
-    print(graph_commits.__name__) # debug for each time GraphQL API is called
+    print(query_count(graph_commits), '() ', TOTAL_QUERIES, sep='')
     query = '''
     query($start_date: DateTime!, $end_date: DateTime!, $login: String!) {
         user(login: $login) {
@@ -53,7 +52,7 @@ def graph_commits(start_date, end_date):
         }
     }'''
     variables = {'start_date': start_date,'end_date': end_date, 'login': USER_NAME}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
     raise Exception('The request has failed, graph_commits()')
@@ -63,7 +62,7 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
     """
     Uses GitHub's GraphQL v4 API to return my total repository, star, or lines of code count.
     """
-    print(graph_repos_stars_loc.__name__, count_type) # debug for each time GraphQL API is called
+    print(query_count(graph_repos_stars_loc), '(type=', count_type, ') ', TOTAL_QUERIES, sep='')
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
@@ -90,34 +89,26 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if count_type == 'repos':
             return request.json()['data']['user']['repositories']['totalCount']
         elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
         else:
-            return all_repo_names_multiprocessing(request.json()['data']['user']['repositories'], add_loc, del_loc)
+            return all_repo_names_multithreading(request.json()['data']['user']['repositories'], add_loc, del_loc)
     raise Exception('The request has failed, graph_repos_stars()')
 
 
-def all_repo_names_multiprocessing(repositories, add_loc=0, del_loc=0):
+def all_repo_names_multithreading(repositories, add_loc=0, del_loc=0):
     """
     Returns the total number of lines of code written by my account
     """
-    pool = multiprocessing.Pool(multiprocessing.cpu_count()) # 12 on my machine
-    pool_list = []
-    for index in range(len(repositories['edges'])):
-        name_with_owner = repositories['edges'][index]['node']['nameWithOwner'].split('/')
-        owner, repo_name = name_with_owner
-        loc = pool.apply_async(query_loc, args=[owner, repo_name])
-        pool_list.append(loc)
-        time.sleep(0.4) # prevent rate limit
-    for index in range(len(repositories['edges'])):
-        both_loc = pool_list[index].get()
-        add_loc += both_loc[0]
-        del_loc += both_loc[1]
-        time.sleep(0.25) # prevent rate limit
+    for node in repositories['edges']:
+        owner, repo_name = node['node']['nameWithOwner'].split('/')
+        loc = query_loc(owner, repo_name)
+        add_loc += loc[0]
+        del_loc += loc[1]
 
     if repositories['edges'] == [] or not repositories['pageInfo']['hasNextPage']: # end of repo list
         total_loc = add_loc - del_loc
@@ -130,7 +121,7 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
     Uses GitHub's GraphQL v4 API to fetch 100 commits at a time
     This is a separate function from graph_commits and graph_repos_stars_loc, because this is called dozens of times
     """
-    print(query_loc.__name__) # debug for each time GraphQL API is called
+    print(query_count(query_loc), '() ', TOTAL_QUERIES, sep='')
     query = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
@@ -164,7 +155,7 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
         }
     }'''
     variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total)
@@ -181,7 +172,7 @@ def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_tot
     only adds the LOC value of commits authored by me
     """
     for node in history['edges']:
-        if node['node']['author']['user'] == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}:
+        if node['node']['author']['user'] == OWNER_ID:
             addition_total += node['node']['additions']
             deletion_total += node['node']['deletions']
 
@@ -246,7 +237,7 @@ def user_id_getter(username):
     """
     Returns the account ID of the username
     """
-    print(user_id_getter.__name__) # debug for each time GraphQL API is called
+    print(query_count(user_id_getter), '() ', TOTAL_QUERIES, sep='')
     query = '''
     query($login: String!){
         user(login: $login) {
@@ -254,56 +245,49 @@ def user_id_getter(username):
         }
     }'''
     variables = {'login': username}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers={'authorization': 'token '+ random.choice(TOKENS)})
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return {'id': request.json()['data']['user']['id']}
     raise Exception('The request has failed, user_id_getter()')
 
 
-def main():
+def query_count(funct):
+    """
+    Counts how many times the GitHub GraphQL API is called
+    """
+    global TOTAL_QUERIES
+    TOTAL_QUERIES += 1
+    return funct.__name__
+
+
+def perf_counter(funct, *args):
+    """
+    Prints the time it takes for a function to run and returns the function's result
+    """
+    start = time.perf_counter()
+    funct_return = funct(*args)
+    difference = time.perf_counter() - start
+    print(funct.__name__, " time: ", sep='', end='')
+    print(difference, "seconds") if difference > 1 else print(difference * 1000, "milliseconds")
+    return funct_return
+
+
+if __name__ == '__main__':
     """
     Runs program over each SVG image
     """
-    # OWNER_ID temporarily hardcoded as multiprocessing cannot access global variable
-    #   define global variable for owner ID
-    #   e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    #   OWNER_ID = user_id_getter(USER_NAME)
-
-    start_age = time.perf_counter()
-    age_data = daily_readme()
-    difference_age = time.perf_counter() - start_age
-    print('Age fetching time:', difference_age)
-
-    start_loc = time.perf_counter()
-    total_loc = graph_repos_stars_loc('LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
-    difference_loc = time.perf_counter() - start_loc
-    print('Loc fetching time:', difference_loc)
-
+    # define global variable for owner ID
+    # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
+    OWNER_ID = perf_counter(user_id_getter, USER_NAME)
+    age_data = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
+    total_loc = perf_counter(graph_repos_stars_loc, 'LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
     # f' for whitespace, "{;,}" for commas
-    start_commit = time.perf_counter()
-    commit_data = f'{"{:,}".format(commit_counter(datetime.datetime.today())): <7}'
-    difference_commit = time.perf_counter() - start_commit
-    print('Commit fetching time:', difference_commit)
-
-    start_star = time.perf_counter()
-    star_data = "{:,}".format(graph_repos_stars_loc('stars', ['OWNER']))
-    difference_star = time.perf_counter() - start_star
-    print('Star fetching time:', difference_star)
-
-    start_repo = time.perf_counter()
-    repo_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER"])): <2}'
-    difference_repo = time.perf_counter() - start_repo
-    print('Repo fetching time:', difference_repo)
-
-    start_contrib = time.perf_counter()
-    contrib_data = f'{"{:,}".format(graph_repos_stars_loc("repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
-    difference_contrib = time.perf_counter() - start_contrib
-    print('Contrib fetching time:', difference_contrib)
+    commit_data = f'{"{:,}".format(perf_counter(commit_counter, datetime.datetime.today())): <7}'
+    star_data = "{:,}".format(perf_counter(graph_repos_stars_loc, 'stars', ['OWNER']))
+    repo_data = f'{"{:,}".format(perf_counter(graph_repos_stars_loc, "repos", ["OWNER"])): <2}'
+    contrib_data = f'{"{:,}".format(perf_counter(graph_repos_stars_loc, "repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
 
     for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
 
     svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
-
-if __name__ == '__main__':
-    main()
