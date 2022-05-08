@@ -8,7 +8,7 @@ import time
 # Personal access token with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
 HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
-TOTAL_QUERIES = 0
+QUERY_COUNT = {'user_id_getter': 0, 'graph_repos_stars_loc': 0, 'query_loc': 0, 'graph_commits': 0}
 
 
 def daily_readme(birth):
@@ -32,15 +32,14 @@ def format_plural(unit):
     'day' + format_plural(diff.days) == 1
     >>> '1 day'
     """
-    if unit != 1: return 's'
-    return ''
+    return 's' if unit != 1 else ''
 
 
 def graph_commits(start_date, end_date):
     """
     Uses GitHub's GraphQL v4 API to return my total commit count
     """
-    print(query_count(graph_commits), '() ', TOTAL_QUERIES, sep='')
+    query_count('graph_commits')
     query = '''
     query($start_date: DateTime!, $end_date: DateTime!, $login: String!) {
         user(login: $login) {
@@ -62,7 +61,7 @@ def graph_repos_stars_loc(count_type, owner_affiliation, cursor=None, add_loc=0,
     """
     Uses GitHub's GraphQL v4 API to return my total repository, star, or lines of code count.
     """
-    print(query_count(graph_repos_stars_loc), '(type=', count_type, ') ', TOTAL_QUERIES, sep='')
+    query_count('graph_repos_stars_loc')
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
@@ -121,7 +120,7 @@ def query_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None)
     Uses GitHub's GraphQL v4 API to fetch 100 commits at a time
     This is a separate function from graph_commits and graph_repos_stars_loc, because this is called dozens of times
     """
-    print(query_count(query_loc), '() ', TOTAL_QUERIES, sep='')
+    query_count('query_loc')
     query = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
@@ -237,7 +236,7 @@ def user_id_getter(username):
     """
     Returns the account ID of the username
     """
-    print(query_count(user_id_getter), '() ', TOTAL_QUERIES, sep='')
+    query_count('user_id_getter')
     query = '''
     query($login: String!){
         user(login: $login) {
@@ -251,24 +250,23 @@ def user_id_getter(username):
     raise Exception('The request has failed, user_id_getter()')
 
 
-def query_count(funct):
+def query_count(funct_id):
     """
     Counts how many times the GitHub GraphQL API is called
     """
-    global TOTAL_QUERIES
-    TOTAL_QUERIES += 1
-    return funct.__name__
+    global QUERY_COUNT
+    QUERY_COUNT[funct_id] += 1
 
 
-def perf_counter(funct, *args):
+def perf_counter(funct, query_type, *args):
     """
     Prints the time it takes for a function to run and returns the function's result
     """
     start = time.perf_counter()
     funct_return = funct(*args)
     difference = time.perf_counter() - start
-    print(funct.__name__, " time: ", sep='', end='')
-    print(difference, "seconds") if difference > 1 else print(difference * 1000, "milliseconds")
+    print('{:<23}'.format('    ' + query_type + ':'), sep='', end='')
+    print('{:>12}'.format('%.4f' % difference + ' s ')) if difference > 1 else print('{:>12}'.format('%.4f' % (difference * 1000) + ' ms'))
     return funct_return
 
 
@@ -276,18 +274,22 @@ if __name__ == '__main__':
     """
     Runs program over each SVG image
     """
+    print('Calculation times:')
     # define global variable for owner ID
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    OWNER_ID = perf_counter(user_id_getter, USER_NAME)
-    age_data = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
-    total_loc = perf_counter(graph_repos_stars_loc, 'LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
-    # f' for whitespace, "{;,}" for commas
-    commit_data = f'{"{:,}".format(perf_counter(commit_counter, datetime.datetime.today())): <7}'
-    star_data = "{:,}".format(perf_counter(graph_repos_stars_loc, 'stars', ['OWNER']))
-    repo_data = f'{"{:,}".format(perf_counter(graph_repos_stars_loc, "repos", ["OWNER"])): <2}'
-    contrib_data = f'{"{:,}".format(perf_counter(graph_repos_stars_loc, "repos", ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"])): <2}'
+    OWNER_ID = perf_counter(user_id_getter, 'owner id', USER_NAME)
+    age_data = perf_counter(daily_readme, 'age', datetime.datetime(2002, 7, 5))
+    total_loc = perf_counter(graph_repos_stars_loc, 'LOC', 'LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    # f" for whitespace, '{;,}' for commas
+    commit_data = f"{'{:,}'.format(perf_counter(commit_counter, 'commits', datetime.datetime.today())): <7}"
+    star_data = '{:,}'.format(perf_counter(graph_repos_stars_loc, 'stars', 'stars', ['OWNER']))
+    repo_data = f"{'{:,}'.format(perf_counter(graph_repos_stars_loc, 'my repos', 'repos', ['OWNER'])): <2}"
+    contrib_data = f"{'{:,}'.format(perf_counter(graph_repos_stars_loc, 'contributed repos', 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])): <2}"
 
-    for index in range(len(total_loc)): total_loc[index] = "{:,}".format(total_loc[index]) # format added, deleted, and total LOC
+    for index in range(len(total_loc)): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
 
     svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
+
+    print('\nTotal GitHub GraphQL API calls:', sum(QUERY_COUNT.values()))
+    for funct_name, count in QUERY_COUNT.items(): print('{:<28}'.format('    ' + funct_name + ':'), '{:>6}'.format(count))
