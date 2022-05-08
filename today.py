@@ -258,16 +258,16 @@ def query_count(funct_id):
     QUERY_COUNT[funct_id] += 1
 
 
-def perf_counter(funct, query_type, *args):
+def perf_counter(funct, query_type, whitespace, *args):
     """
     Prints the time it takes for a function to run and returns the function's result
     """
     start = time.perf_counter()
     funct_return = funct(*args)
     difference = time.perf_counter() - start
-    print('{:<23}'.format('    ' + query_type + ':'), sep='', end='')
+    print('{:<23}'.format('   ' + query_type + ':'), sep='', end='')
     print('{:>12}'.format('%.4f' % difference + ' s ')) if difference > 1 else print('{:>12}'.format('%.4f' % (difference * 1000) + ' ms'))
-    return funct_return
+    return (f"{'{:,}'.format(funct_return): <{whitespace}}", difference) if whitespace >= 0 else (funct_return, difference)
 
 
 if __name__ == '__main__':
@@ -277,19 +277,24 @@ if __name__ == '__main__':
     print('Calculation times:')
     # define global variable for owner ID
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    OWNER_ID = perf_counter(user_id_getter, 'owner id', USER_NAME)
-    age_data = perf_counter(daily_readme, 'age', datetime.datetime(2002, 7, 5))
-    total_loc = perf_counter(graph_repos_stars_loc, 'LOC', 'LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
-    # f" for whitespace, '{;,}' for commas
-    commit_data = f"{'{:,}'.format(perf_counter(commit_counter, 'commits', datetime.datetime.today())): <7}"
-    star_data = '{:,}'.format(perf_counter(graph_repos_stars_loc, 'stars', 'stars', ['OWNER']))
-    repo_data = f"{'{:,}'.format(perf_counter(graph_repos_stars_loc, 'my repos', 'repos', ['OWNER'])): <2}"
-    contrib_data = f"{'{:,}'.format(perf_counter(graph_repos_stars_loc, 'contributed repos', 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])): <2}"
+    OWNER_ID, id_time = perf_counter(user_id_getter, 'owner id', -1, USER_NAME)
+
+    age_data, age_time = perf_counter(daily_readme, 'age', -1, datetime.datetime(2002, 7, 5))
+    total_loc, loc_time = perf_counter(graph_repos_stars_loc, 'LOC', -1, 'LOC', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    commit_data, commit_time = perf_counter(commit_counter, 'commits', 7, datetime.datetime.today())
+    star_data, star_time = perf_counter(graph_repos_stars_loc, 'stars', 0, 'stars', ['OWNER'])
+    repo_data, repo_time = perf_counter(graph_repos_stars_loc, 'my repos', 2, 'repos', ['OWNER'])
+    contrib_data, contrib_time = perf_counter(graph_repos_stars_loc, 'contributed repos', 2, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
 
     for index in range(len(total_loc)): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
 
     svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
     svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
 
-    print('\nTotal GitHub GraphQL API calls:', sum(QUERY_COUNT.values()))
-    for funct_name, count in QUERY_COUNT.items(): print('{:<28}'.format('    ' + funct_name + ':'), '{:>6}'.format(count))
+    # move cursor to override 'Calculation times:' with 'Total function time:' and the total function time, and then move cursor back
+    print('\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F',
+        '{:<21}'.format('Total function time:'), '{:>11}'.format('%.4f' % (id_time + age_time + loc_time + commit_time + star_time + repo_time + contrib_time)),
+        ' s \033[E\033[E\033[E\033[E\033[E\033[E\033[E\033[E', sep='')
+
+    print('Total GitHub GraphQL API calls:', sum(QUERY_COUNT.values()))
+    for funct_name, count in QUERY_COUNT.items(): print('{:<28}'.format('   ' + funct_name + ':'), '{:>6}'.format(count))
