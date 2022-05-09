@@ -199,23 +199,33 @@ def loc_counter(edges, loc_add=0, loc_del=0):
     Checks every repository to see if it has been updated since the last time it was cached
     If it has, run recursive_loc on that repository to update the LOC count
     """
-    with open('cache.txt', 'r') as f:
-        data = f.readlines()
-    if len(data)-6 != len(edges):
-        flush_cache(edges)
-        with open('cache.txt', 'r') as f:
+    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt' # Create a unique filename for each user
+    try:
+        with open(filename, 'r') as f:
             data = f.readlines()
+    except FileNotFoundError: # If the cache file doesn't exist, create it
+        data = []
+        data.append('This line and the following 5 lines are a comment block.\n')
+        for _ in range(5): data.append('Write whatever you want here.\n')
+        with open(filename, 'w') as f:
+            f.writelines(data)
+
+    if len(data)-6 != len(edges): # If the number of repos has changed
+        flush_cache(edges, filename)
+        with open(filename, 'r') as f:
+            data = f.readlines()
+
     cache_comment = data[:6] # save the first 6 lines
     data = data[6:] # remove those lines
     for index in range(len(edges)):
-        repo_hash, commit_count, __, __ = data[index].split()
+        repo_hash, commit_count, *__ = data[index].split()
         if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
             if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
                 # commit count has changed, update cache
                 owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
                 loc = recursive_loc(owner, repo_name)
                 data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
-    with open('cache.txt', 'w') as f:
+    with open(filename, 'w') as f:
         f.writelines(cache_comment)
         f.writelines(data)
     for line in data:
@@ -225,15 +235,15 @@ def loc_counter(edges, loc_add=0, loc_del=0):
     return [loc_add, loc_del, loc_add - loc_del]
 
 
-def flush_cache(edges):
+def flush_cache(edges, filename):
     """
     Wipes the cache file
     This is called when the number of repositories changes
     """
-    with open('cache.txt', 'r') as f:
+    with open(filename, 'r') as f:
         data = f.readlines()
         data = data[:6] # only save the first 6 lines
-    with open('cache.txt', 'w') as f:
+    with open(filename, 'w') as f:
         f.writelines(data)
         for node in edges:
             f.write(hashlib.sha256(node['node']['nameWithOwner'].encode('utf-8')).hexdigest() + ' 0 0 0\n')
