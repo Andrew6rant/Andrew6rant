@@ -159,7 +159,7 @@ def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_tot
     else: return recursive_loc(owner, repo_name, addition_total, deletion_total, history['pageInfo']['endCursor'])
 
 
-def loc_query(owner_affiliation, cursor=None):
+def loc_query(owner_affiliation, comment_size=0, cursor=None):
     query_count('loc_query')
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
@@ -191,40 +191,45 @@ def loc_query(owner_affiliation, cursor=None):
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
-        return loc_counter(request.json()['data']['user']['repositories']['edges'])
+        return loc_counter(request.json()['data']['user']['repositories']['edges'], comment_size)
     raise Exception('The request has failed, loc_query()')
 
-def loc_counter(edges, loc_add=0, loc_del=0):
+def loc_counter(edges, comment_size, loc_add=0, loc_del=0):
     """
     Checks every repository to see if it has been updated since the last time it was cached
     If it has, run recursive_loc on that repository to update the LOC count
     """
+    cached = True # Assume all repositories are cached
     filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt' # Create a unique filename for each user
     try:
         with open(filename, 'r') as f:
             data = f.readlines()
     except FileNotFoundError: # If the cache file doesn't exist, create it
         data = []
-        data.append('This line and the following 5 lines are a comment block.\n')
-        for _ in range(5): data.append('Write whatever you want here.\n')
+        if comment_size > 0:
+            for _ in range(comment_size): data.append('This line is a comment block. Write whatever you want here.\n')
         with open(filename, 'w') as f:
             f.writelines(data)
 
     if len(data)-6 != len(edges): # If the number of repos has changed
-        flush_cache(edges, filename)
+        cached = False
+        flush_cache(edges, filename, comment_size)
         with open(filename, 'r') as f:
             data = f.readlines()
 
-    cache_comment = data[:6] # save the first 6 lines
-    data = data[6:] # remove those lines
+    cache_comment = data[:comment_size] # save the first 6 lines
+    data = data[comment_size:] # remove those lines
     for index in range(len(edges)):
         repo_hash, commit_count, *__ = data[index].split()
         if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
-            if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
-                # commit count has changed, update cache
-                owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
-                loc = recursive_loc(owner, repo_name)
-                data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
+            try:
+                if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
+                    # if commit count has changed, update loc for that repo
+                    owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
+                    loc = recursive_loc(owner, repo_name)
+                    data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
+            except TypeError: # If the repo is empty
+                data[index] = repo_hash + ' 0 0 0\n'
     with open(filename, 'w') as f:
         f.writelines(cache_comment)
         f.writelines(data)
@@ -232,17 +237,19 @@ def loc_counter(edges, loc_add=0, loc_del=0):
         loc = line.split()
         loc_add += int(loc[2])
         loc_del += int(loc[3])
-    return [loc_add, loc_del, loc_add - loc_del]
+    return [loc_add, loc_del, loc_add - loc_del, cached]
 
 
-def flush_cache(edges, filename):
+def flush_cache(edges, filename, comment_size):
     """
     Wipes the cache file
-    This is called when the number of repositories changes
+    This is called when the number of repositories changes or when the file is first created
     """
+    
     with open(filename, 'r') as f:
         data = f.readlines()
-        data = data[:6] # only save the first 6 lines
+        if comment_size > 0:
+            data = data[:comment_size] # only save the comment
     with open(filename, 'w') as f:
         f.writelines(data)
         for node in edges:
@@ -327,39 +334,55 @@ def query_count(funct_id):
     QUERY_COUNT[funct_id] += 1
 
 
-def perf_counter(funct, query_type, whitespace, *args):
+def perf_counter(funct, *args):
     """
-    Prints the time it takes for a function to run
-    Returns the function's result and time differential if whitespace argument is -1, otherwise returns formatted result and time differential
+    Calculates the time it takes for a function to run
+    Returns the function result and the time differential
     """
     start = time.perf_counter()
     funct_return = funct(*args)
-    difference = time.perf_counter() - start
+    return funct_return, time.perf_counter() - start
+
+
+def formatter(query_type, difference, funct_return=False, whitespace=0):
+    """
+    Prints a formatted time differential
+    Returns formatted result if whitespace is specified, otherwise returns raw result
+    """
     print('{:<23}'.format('   ' + query_type + ':'), sep='', end='')
     print('{:>12}'.format('%.4f' % difference + ' s ')) if difference > 1 else print('{:>12}'.format('%.4f' % (difference * 1000) + ' ms'))
-    return (f"{'{:,}'.format(funct_return): <{whitespace}}", difference) if whitespace >= 0 else (funct_return, difference)
+    if whitespace:
+        return f"{'{:,}'.format(funct_return): <{whitespace}}"
+    return funct_return
 
 
 if __name__ == '__main__':
     """
-    Runs program over each SVG image
+    Andrew Grant (Andrew6rant), 2022
     """
     print('Calculation times:')
     # define global variable for owner ID
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    OWNER_ID, id_time = perf_counter(user_id_getter, 'owner id', -1, USER_NAME)
-    
-    age_data, age_time = perf_counter(daily_readme, 'age calculation', -1, datetime.datetime(2002, 7, 5))
-    total_loc, loc_time = perf_counter(loc_query, 'LOC (cached)', -1, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
-    commit_data, commit_time = perf_counter(commit_counter, 'commit counter', 7, datetime.datetime.today())
-    star_data, star_time = perf_counter(graph_repos_stars, 'star counter', 0, 'stars', ['OWNER'])
-    repo_data, repo_time = perf_counter(graph_repos_stars, 'my repositories', 2, 'repos', ['OWNER'])
-    contrib_data, contrib_time = perf_counter(graph_repos_stars, 'contributed repos', 2, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    OWNER_ID, id_time = perf_counter(user_id_getter, USER_NAME)
+    formatter('owner id', id_time)
 
-    for index in range(len(total_loc)): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
+    age_data, age_time = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
+    formatter('age calculation', age_time)
+    total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 6)
+    formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
+    commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today())
+    commit_data = formatter('commit counter', commit_time, commit_data, 7)
+    star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
+    star_data = formatter('star counter', star_time, star_data)
+    repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
+    repo_data = formatter('my repositories', repo_time, repo_data, 2)
+    contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    contrib_data = formatter('contributed repos', contrib_time, contrib_data, 2)
 
-    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
-    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc)
+    for index in range(len(total_loc)-1): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
+
+    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc[:-1])
+    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc[:-1])
 
     # move cursor to override 'Calculation times:' with 'Total function time:' and the total function time, then move cursor back
     print('\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F',
