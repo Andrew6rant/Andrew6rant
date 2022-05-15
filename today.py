@@ -55,7 +55,7 @@ def graph_commits(start_date, end_date):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
-    raise Exception('The request has failed, graph_commits()')
+    raise Exception('graph_commits() has failed with a', request.status_code, request.text)
 
 
 def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
@@ -92,7 +92,7 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del
             return request.json()['data']['user']['repositories']['totalCount']
         elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
-    raise Exception('The request has failed, graph_repos_stars()')
+    raise Exception('graph_repos_stars() has failed with a', request.status_code, request.text)
 
 
 def recursive_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None):
@@ -140,8 +140,7 @@ def recursive_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=N
         else: return 0
     elif request.status_code == 403:
         raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
-    print(request.status_code)
-    raise Exception('The request has failed, recursive_loc()')
+    raise Exception('recursive_loc() has failed with a', request.status_code, request.text)
 
 
 def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_total):
@@ -159,12 +158,17 @@ def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_tot
     else: return recursive_loc(owner, repo_name, addition_total, deletion_total, history['pageInfo']['endCursor'])
 
 
-def loc_query(owner_affiliation, comment_size=0, cursor=None):
+def loc_query(owner_affiliation, comment_size=0, cursor=None, edges=[]):
+    """
+    Uses GitHub's GraphQL v4 API to query all the repositories I have access to (with respect to owner_affiliation)
+    Queries 50 repos at a time, because larger queries give a 502 timeout error
+    Returns the total number of lines of code in all repositories
+    """
     query_count('loc_query')
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
-            repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
+            repositories(first: 50, after: $cursor, ownerAffiliations: $owner_affiliation) {
             edges {
                 node {
                     ... on Repository {
@@ -191,12 +195,17 @@ def loc_query(owner_affiliation, comment_size=0, cursor=None):
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
-        return loc_counter(request.json()['data']['user']['repositories']['edges'], comment_size)
-    raise Exception('The request has failed, loc_query()')
+        if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:
+            edges += request.json()['data']['user']['repositories']['edges']
+            return loc_query(owner_affiliation, comment_size, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
+        else:
+            return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size)
+    raise Exception('loc_query() has failed with a', request.status_code, request.text)
 
-def loc_counter(edges, comment_size, loc_add=0, loc_del=0):
+
+def cache_builder(edges, comment_size, loc_add=0, loc_del=0):
     """
-    Checks every repository to see if it has been updated since the last time it was cached
+    Checks each repository in edges to see if it has been updated since the last time it was cached
     If it has, run recursive_loc on that repository to update the LOC count
     """
     cached = True # Assume all repositories are cached
@@ -211,13 +220,13 @@ def loc_counter(edges, comment_size, loc_add=0, loc_del=0):
         with open(filename, 'w') as f:
             f.writelines(data)
 
-    if len(data)-6 != len(edges): # If the number of repos has changed
+    if len(data)-comment_size != len(edges): # If the number of repos has changed
         cached = False
         flush_cache(edges, filename, comment_size)
         with open(filename, 'r') as f:
             data = f.readlines()
 
-    cache_comment = data[:comment_size] # save the first 6 lines
+    cache_comment = data[:comment_size] # save the comment block
     data = data[comment_size:] # remove those lines
     for index in range(len(edges)):
         repo_hash, commit_count, *__ = data[index].split()
@@ -284,17 +293,17 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
     f.close()
 
 
-def commit_counter(date):
+def commit_counter(today, first_commit_date):
     """
     Counts up my total commits.
     Loops commits per year (starting backwards from today, continuing until my account's creation date)
     """
     total_commits = 0
     # since GraphQL's contributionsCollection has a maximum reach of one year
-    while date.isoformat() > '2019-11-02T00:00:00.000Z': # one day before my very first commit
-        old_date = date.isoformat()
-        date = date - datetime.timedelta(days=365)
-        total_commits += graph_commits(date.isoformat(), old_date)
+    while today.isoformat() > first_commit_date: # one day before my very first commit
+        old_date = today.isoformat()
+        today = today - datetime.timedelta(days=365)
+        total_commits += graph_commits(today.isoformat(), old_date)
     return total_commits
 
 
@@ -323,7 +332,7 @@ def user_id_getter(username):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return {'id': request.json()['data']['user']['id']}
-    raise Exception('The request has failed, user_id_getter()')
+    raise Exception('user_id_getter() has failed with a', request.status_code, request.text)
 
 
 def query_count(funct_id):
@@ -370,7 +379,7 @@ if __name__ == '__main__':
     formatter('age calculation', age_time)
     total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 6)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
-    commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today())
+    commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today(), '2019-11-02T00:00:00.000Z')
     commit_data = formatter('commit counter', commit_time, commit_data, 7)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     star_data = formatter('star counter', star_time, star_data)
