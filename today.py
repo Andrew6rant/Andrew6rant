@@ -9,7 +9,7 @@ import hashlib
 # Personal access token with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
 HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
-QUERY_COUNT = {'user_id_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
+QUERY_COUNT = {'user_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
 def daily_readme(birthday):
@@ -317,22 +317,23 @@ def svg_element_getter(filename):
     for index in range(len(tspan)): print(index, tspan[index].firstChild.data)
 
 
-def user_id_getter(username):
+def user_getter(username):
     """
-    Returns the account ID of the username
+    Returns the account ID and creation time of the user
     """
-    query_count('user_id_getter')
+    query_count('user_getter')
     query = '''
     query($login: String!){
         user(login: $login) {
             id
+            createdAt
         }
     }'''
     variables = {'login': username}
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
-        return {'id': request.json()['data']['user']['id']}
-    raise Exception('user_id_getter() has failed with a', request.status_code, request.text)
+        return {'id': request.json()['data']['user']['id']}, request.json()['data']['user']['createdAt']
+    raise Exception('user_getter() has failed with a', request.status_code, request.text)
 
 
 def query_count(funct_id):
@@ -370,16 +371,17 @@ if __name__ == '__main__':
     Andrew Grant (Andrew6rant), 2022
     """
     print('Calculation times:')
-    # define global variable for owner ID
-    # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} for username 'Andrew6rant'
-    OWNER_ID, id_time = perf_counter(user_id_getter, USER_NAME)
-    formatter('owner id', id_time)
+    # define global variable for owner ID and calculate user's creation date
+    # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} and 2019-11-03T21:15:07Z for username 'Andrew6rant'
+    user_data, user_time = perf_counter(user_getter, USER_NAME)
+    OWNER_ID, acc_date = user_data
+    formatter('account data', user_time)
 
     age_data, age_time = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
     formatter('age calculation', age_time)
     total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 6)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
-    commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today(), '2019-11-02T00:00:00.000Z')
+    commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today(), acc_date)
     commit_data = formatter('commit counter', commit_time, commit_data, 7)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     star_data = formatter('star counter', star_time, star_data)
@@ -395,7 +397,7 @@ if __name__ == '__main__':
 
     # move cursor to override 'Calculation times:' with 'Total function time:' and the total function time, then move cursor back
     print('\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F',
-        '{:<21}'.format('Total function time:'), '{:>11}'.format('%.4f' % (id_time + age_time + loc_time + commit_time + star_time + repo_time + contrib_time)),
+        '{:<21}'.format('Total function time:'), '{:>11}'.format('%.4f' % (user_time + age_time + loc_time + commit_time + star_time + repo_time + contrib_time)),
         ' s \033[E\033[E\033[E\033[E\033[E\033[E\033[E\033[E', sep='')
 
     print('Total GitHub GraphQL API calls:', '{:>3}'.format(sum(QUERY_COUNT.values())))
