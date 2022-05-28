@@ -55,7 +55,7 @@ def graph_commits(start_date, end_date):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
-    raise Exception('graph_commits() has failed with a', request.status_code, request.text)
+    raise Exception('graph_commits() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
 def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
@@ -92,10 +92,10 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del
             return request.json()['data']['user']['repositories']['totalCount']
         elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
-    raise Exception('graph_repos_stars() has failed with a', request.status_code, request.text)
+    raise Exception('graph_repos_stars() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def recursive_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=None):
+def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, cursor=None):
     """
     Uses GitHub's GraphQL v4 API and cursor pagination to fetch 100 commits from a repository at a time
     """
@@ -136,14 +136,15 @@ def recursive_loc(owner, repo_name, addition_total=0, deletion_total=0, cursor=N
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
-            return loc_counter_one_repo(owner, repo_name, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total)
+            return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total)
         else: return 0
-    elif request.status_code == 403:
+    force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
+    if request.status_code == 403:
         raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
-    raise Exception('recursive_loc() has failed with a', request.status_code, request.text)
+    raise Exception('recursive_loc() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_total):
+def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, addition_total, deletion_total):
     """
     Recursively call recursive_loc (since GraphQL can only search 100 commits at a time) 
     only adds the LOC value of commits authored by me
@@ -155,10 +156,10 @@ def loc_counter_one_repo(owner, repo_name, history, addition_total, deletion_tot
 
     if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
         return addition_total, deletion_total
-    else: return recursive_loc(owner, repo_name, addition_total, deletion_total, history['pageInfo']['endCursor'])
+    else: return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, history['pageInfo']['endCursor'])
 
 
-def loc_query(owner_affiliation, comment_size=0, cursor=None, edges=[]):
+def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]):
     """
     Uses GitHub's GraphQL v4 API to query all the repositories I have access to (with respect to owner_affiliation)
     Queries 50 repos at a time, because larger queries give a 502 timeout error
@@ -197,13 +198,13 @@ def loc_query(owner_affiliation, comment_size=0, cursor=None, edges=[]):
     if request.status_code == 200:
         if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:
             edges += request.json()['data']['user']['repositories']['edges']
-            return loc_query(owner_affiliation, comment_size, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
+            return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
         else:
-            return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size)
-    raise Exception('loc_query() has failed with a', request.status_code, request.text)
+            return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
+    raise Exception('loc_query() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def cache_builder(edges, comment_size, loc_add=0, loc_del=0):
+def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     """
     Checks each repository in edges to see if it has been updated since the last time it was cached
     If it has, run recursive_loc on that repository to update the LOC count
@@ -220,7 +221,7 @@ def cache_builder(edges, comment_size, loc_add=0, loc_del=0):
         with open(filename, 'w') as f:
             f.writelines(data)
 
-    if len(data)-comment_size != len(edges): # If the number of repos has changed
+    if len(data)-comment_size != len(edges) or force_cache: # If the number of repos has changed, or force_cache is True
         cached = False
         flush_cache(edges, filename, comment_size)
         with open(filename, 'r') as f:
@@ -235,7 +236,7 @@ def cache_builder(edges, comment_size, loc_add=0, loc_del=0):
                 if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
                     # if commit count has changed, update loc for that repo
                     owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
-                    loc = recursive_loc(owner, repo_name)
+                    loc = recursive_loc(owner, repo_name, data, cache_comment)
                     data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
             except TypeError: # If the repo is empty
                 data[index] = repo_hash + ' 0 0 0\n'
@@ -254,7 +255,6 @@ def flush_cache(edges, filename, comment_size):
     Wipes the cache file
     This is called when the number of repositories changes or when the file is first created
     """
-    
     with open(filename, 'r') as f:
         data = f.readlines()
         if comment_size > 0:
@@ -263,6 +263,18 @@ def flush_cache(edges, filename, comment_size):
         f.writelines(data)
         for node in edges:
             f.write(hashlib.sha256(node['node']['nameWithOwner'].encode('utf-8')).hexdigest() + ' 0 0 0\n')
+
+
+def force_close_file(data, cache_comment):
+    """
+    Forces the file to close, preserving whatever data was written to it
+    This is needed because if this function is called, the program would've crashed before the file is properly saved and closed
+    """
+    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt'
+    with open(filename, 'w') as f:
+        f.writelines(cache_comment)
+        f.writelines(data)
+    print('There was an error while writing to the cache file. The file,', filename, 'has had the partial data saved and closed.')
 
 
 def stars_counter(data):
@@ -333,7 +345,7 @@ def user_getter(username):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         return {'id': request.json()['data']['user']['id']}, request.json()['data']['user']['createdAt']
-    raise Exception('user_getter() has failed with a', request.status_code, request.text)
+    raise Exception('user_getter() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
 def query_count(funct_id):
