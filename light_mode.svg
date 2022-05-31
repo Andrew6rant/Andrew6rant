@@ -42,7 +42,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="30">andrew@grant</tspan>
 <tspan x="370" y="50">——————</tspan>
 <tspan x="370" y="70" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
-<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 10 months, 25 days</tspan>
+<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 10 months, 26 days</tspan>
 <tspan x="370" y="110" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology</tspan><tspan class="commentColor"> #RIT</tspan>
 <tspan x="370" y="130" class="keyColor">Kernel</tspan>: <tspan class="valueColor">Electrical and Computer Engineering Technology</tspan><tspan class="commentColor"> #CPET</tspan>
 <tspan x="370" y="150" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, VSCode 1.64.0</tspan>
@@ -58,8 +58,8 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="410" class="keyColor">LinkedIn</tspan>: <tspan class="valueColor">Andrew6rant</tspan>
 <tspan x="370" y="450" class="keyColor">GitHub Stats</tspan>:
 <tspan x="370" y="470">——————</tspan>
-<tspan x="370" y="490" class="keyColor">Repos</tspan>: <tspan class="valueColor">46</tspan> {<tspan class="keyColor">Contrib_to</tspan>: <tspan class="valueColor">71</tspan>} | <tspan class="keyColor">Commmits</tspan>: <tspan class="valueColor">1,242  </tspan> | <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">47</tspan>
-<tspan x="370" y="510" class="keyColor">Lines of Code Written by Me</tspan>: <tspan class="valueColor">375,862</tspan> (<tspan class="addColor">434,055++</tspan>, <tspan class="delColor">58,193--</tspan>)
+<tspan x="370" y="490" class="keyColor">Repos</tspan>: <tspan class="valueColor">47</tspan> {<tspan class="keyColor">Contrib_to</tspan>: <tspan class="valueColor">72</tspan>} | <tspan class="keyColor">Commmits</tspan>: <tspan class="valueColor">1,245  </tspan> | <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">47</tspan>
+<tspan x="370" y="510" class="keyColor">Lines of Code Written by Me</tspan>: <tspan class="valueColor">376,342</tspan> (<tspan class="addColor">434,555++</tspan>, <tspan class="delColor">58,213--</tspan>)
 </text>
 
 </svg>
