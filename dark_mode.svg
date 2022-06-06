@@ -42,7 +42,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="30">andrew@grant</tspan>
 <tspan x="370" y="50">——————</tspan>
 <tspan x="370" y="70" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
-<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 11 months, 0 days</tspan>
+<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">19 years, 11 months, 1 day</tspan>
 <tspan x="370" y="110" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology</tspan><tspan class="commentColor"> #RIT</tspan>
 <tspan x="370" y="130" class="keyColor">Kernel</tspan>: <tspan class="valueColor">Electrical and Computer Engineering Technology</tspan><tspan class="commentColor"> #CPET</tspan>
 <tspan x="370" y="150" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, VSCode 1.64.0</tspan>
@@ -59,7 +59,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="450" class="keyColor">GitHub Stats</tspan>:
 <tspan x="370" y="470">——————</tspan>
 <tspan x="370" y="490" class="keyColor">Repos</tspan>: <tspan class="valueColor">48</tspan> {<tspan class="keyColor">Contrib_to</tspan>: <tspan class="valueColor">73</tspan>} | <tspan class="keyColor">Commmits</tspan>: <tspan class="valueColor">1,255  </tspan> | <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">50</tspan>
-<tspan x="370" y="510" class="keyColor">Lines of Code Written by Me</tspan>: <tspan class="valueColor">376,623</tspan> (<tspan class="addColor">434,876++</tspan>, <tspan class="delColor">58,253--</tspan>)
+<tspan x="370" y="510" class="keyColor">Lines of Code Written by Me</tspan>: <tspan class="valueColor">376,611</tspan> (<tspan class="addColor">435,051++</tspan>, <tspan class="delColor">58,440--</tspan>)
 </text>
 
 </svg>
