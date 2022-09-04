@@ -95,7 +95,7 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del
     raise Exception('graph_repos_stars() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, cursor=None):
+def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, my_commits=0, cursor=None):
     """
     Uses GitHub's GraphQL v4 API and cursor pagination to fetch 100 commits from a repository at a time
     """
@@ -136,7 +136,7 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
-            return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total)
+            return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total, my_commits)
         else: return 0
     force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
     if request.status_code == 403:
@@ -144,19 +144,20 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
     raise Exception('recursive_loc() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, addition_total, deletion_total):
+def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, addition_total, deletion_total, my_commits):
     """
     Recursively call recursive_loc (since GraphQL can only search 100 commits at a time) 
     only adds the LOC value of commits authored by me
     """
     for node in history['edges']:
         if node['node']['author']['user'] == OWNER_ID:
+            my_commits += 1
             addition_total += node['node']['additions']
             deletion_total += node['node']['deletions']
 
     if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
-        return addition_total, deletion_total
-    else: return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, history['pageInfo']['endCursor'])
+        return addition_total, deletion_total, my_commits
+    else: return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, my_commits, history['pageInfo']['endCursor'])
 
 
 def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]):
@@ -237,16 +238,16 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                     # if commit count has changed, update loc for that repo
                     owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
                     loc = recursive_loc(owner, repo_name, data, cache_comment)
-                    data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
+                    data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
             except TypeError: # If the repo is empty
-                data[index] = repo_hash + ' 0 0 0\n'
+                data[index] = repo_hash + ' 0 0 0 0\n'
     with open(filename, 'w') as f:
         f.writelines(cache_comment)
         f.writelines(data)
     for line in data:
         loc = line.split()
-        loc_add += int(loc[2])
-        loc_del += int(loc[3])
+        loc_add += int(loc[3])
+        loc_del += int(loc[4])
     return [loc_add, loc_del, loc_add - loc_del, cached]
 
 
@@ -262,8 +263,27 @@ def flush_cache(edges, filename, comment_size):
     with open(filename, 'w') as f:
         f.writelines(data)
         for node in edges:
-            f.write(hashlib.sha256(node['node']['nameWithOwner'].encode('utf-8')).hexdigest() + ' 0 0 0\n')
+            f.write(hashlib.sha256(node['node']['nameWithOwner'].encode('utf-8')).hexdigest() + ' 0 0 0 0\n')
 
+
+def add_archive():
+    """
+    Several repositories I have contributed to have since been deleted.
+    This function adds them using their last known data
+    """
+    # print("OWNER_ID:", OWNER_ID) # for debugging
+    with open('cache/repository_archive.txt', 'r') as f:
+        data = f.readlines()
+    old_data = data
+    data = data[7:len(data)-3] # remove the comment block    
+    added_loc, deleted_loc = 0, 0
+    contributed_repos = len(data)
+    for line in data:
+        repo_hash, total_commits, my_commits, *loc = line.split()
+        added_loc += int(loc[0])
+        deleted_loc += int(loc[1])
+    total_commits = old_data[-1].split()[4][:-1]
+    return [added_loc, deleted_loc, added_loc - deleted_loc, total_commits, contributed_repos]
 
 def force_close_file(data, cache_comment):
     """
@@ -388,18 +408,26 @@ if __name__ == '__main__':
     user_data, user_time = perf_counter(user_getter, USER_NAME)
     OWNER_ID, acc_date = user_data
     formatter('account data', user_time)
-
     age_data, age_time = perf_counter(daily_readme, datetime.datetime(2002, 7, 5))
     formatter('age calculation', age_time)
-    total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 6)
+    total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
     commit_data, commit_time = perf_counter(commit_counter, datetime.datetime.today(), acc_date)
-    commit_data = formatter('commit counter', commit_time, commit_data, 7)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
-    star_data = formatter('star counter', star_time, star_data)
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
-    repo_data = formatter('my repositories', repo_time, repo_data, 2)
     contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+
+    # several repositories that I've contributed to have since been deleted.
+    if OWNER_ID == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}: # only calculate for user Andrew6rant
+        archived_data = add_archive()
+        for index in range(len(total_loc)-1):
+            total_loc[index] += archived_data[index]
+        contrib_data += archived_data[-1]
+        commit_data += int(archived_data[-2])
+
+    commit_data = formatter('commit counter', commit_time, commit_data, 7)
+    star_data = formatter('star counter', star_time, star_data)
+    repo_data = formatter('my repositories', repo_time, repo_data, 2)
     contrib_data = formatter('contributed repos', contrib_time, contrib_data, 2)
 
     for index in range(len(total_loc)-1): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC

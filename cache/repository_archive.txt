@@ -1,0 +1,26 @@
+This is an archive of all of the deleted repositories I have contributed to.
+
+repository (hashed)  total commits  my commits  LOC added by me  LOC deleted by me
+         \                \                \           \___________  \
+          \                \                \_____________________ \  \
+           \                \___________________________________  \ \  \
+____________\___________________________________________________\__\_\__\____
+135211924baa5ccc322485c4251d09d0898936c82195f823939a69d7c6ae89e8 24 X 48 4
+6bd92e7d131e6a3f6b5fb88081391bef1c47fe9e24b889be55dd979484b832cd 46 X 471 64
+4639758f75cd3bd0749b36b4b567cb3b2d7bed2f5d7ebed8e8623751831b2dc1 57 X 626 146
+933fe62a20703a262014619c1fd6c4994784dbc3253d3555507b50d102b8ef1e 62 X 824 183
+7bc310c90e2df21cd3e426163f7458b4aa619f50682e04ce922a499acc44baa5 51 X 425 109
+7131a490c33efee0020cdd15df1866fa01d128b12b4ba47c1783d5627a518158 8 X 141 20
+c3e8ba20ca45df28f34388a3365757bc0ea432154769fd41f2701f705074db22 42 X 472 73
+ad740d73c90325cfd3edd2a2f7284422af86606dd82646cd0cc3f77136f93eff 23 X 313 67
+f03fb418280a72dc9d1da69b38b686e4aae065eb102c6c80cb50dc5496b6335d 44 X 607 142
+3feb2e94919b251d82fdde536a97b86b09e5cf5f09f881a4c1a39f7afca88a02 10 X 91 33
+f72ac7dfc7e97fbbace45e3ef1297425c66d2c169f058bad388d0506802694c0 46 X 643 120
+7468a5181057b17ee236f7c42fab94ebf7c13a52eb4d4251d50b287d530358e3 51 X 706 216
+0a6e4ce4fa5b3ad310f7f0746fe8af27eed60b70729df3bf13f5545f6f6a9b8a 46 X 518 124
+9f5576ebed479d822c23b286e9aa4e12024435151472e3a45510d0c997e3de7b 8 X 43 26
+1c470c80c0c0b6fe0d0944381baef3b2a523bd2839bded355c797a8e917223d6 36 X 439 52
+8fccdfad0ca51b2b04a4253ab8c27d25d12a8d2437aa836df3bd69bef2b96562 8 X 91 17
+
+The count of my per reposigtory commits was not saved when these were deleted,
+but the total was 543. Commit proof: fd6960db8c79978f3ab5d113d49c94d86e2ad089
