@@ -9,7 +9,7 @@ import hashlib
 # Personal access token with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
 HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
-QUERY_COUNT = {'user_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
+QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
 def daily_readme(birthday):
@@ -37,6 +37,16 @@ def format_plural(unit):
     return 's' if unit != 1 else ''
 
 
+def simple_request(func_name, query, variables):
+    """
+    Returns a request, or raises an Exception if the response does not succeed.
+    """
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    if request.status_code == 200:
+        return request
+    raise Exception(func_name, ' has failed with a', request.status_code, request.text, QUERY_COUNT)
+
+
 def graph_commits(start_date, end_date):
     """
     Uses GitHub's GraphQL v4 API to return my total commit count
@@ -53,10 +63,8 @@ def graph_commits(start_date, end_date):
         }
     }'''
     variables = {'start_date': start_date,'end_date': end_date, 'login': USER_NAME}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
-    if request.status_code == 200:
-        return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
-    raise Exception('graph_commits() has failed with a', request.status_code, request.text, QUERY_COUNT)
+    request = simple_request(graph_commits.__name__, query, variables)
+    return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
 
 
 def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
@@ -87,13 +95,12 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = simple_request(graph_repos_stars.__name__, query, variables)
     if request.status_code == 200:
         if count_type == 'repos':
             return request.json()['data']['user']['repositories']['totalCount']
         elif count_type == 'stars':
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
-    raise Exception('graph_repos_stars() has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
 def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, my_commits=0, cursor=None):
@@ -134,7 +141,7 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
         }
     }'''
     variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS) # I cannot use simple_request(), because I want to save the file before raising Exception
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total, my_commits)
@@ -196,14 +203,12 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
-    if request.status_code == 200:
-        if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:
-            edges += request.json()['data']['user']['repositories']['edges']
-            return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
-        else:
-            return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
-    raise Exception('loc_query() has failed with a', request.status_code, request.text, QUERY_COUNT)
+    request = simple_request(loc_query.__name__, query, variables)
+    if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:   # If repository data has another page
+        edges += request.json()['data']['user']['repositories']['edges']            # Add on to the LoC count
+        return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
+    else:
+        return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
 
 
 def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
@@ -306,7 +311,7 @@ def stars_counter(data):
     return total_stars
 
 
-def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib_data, loc_data):
+def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib_data, follower_data, loc_data):
     """
     Parse SVG files and update elements with my age, commits, stars, repositories, and lines written
     """
@@ -318,9 +323,10 @@ def svg_overwrite(filename, age_data, commit_data, star_data, repo_data, contrib
     tspan[67].firstChild.data = contrib_data
     tspan[69].firstChild.data = commit_data
     tspan[71].firstChild.data = star_data
-    tspan[73].firstChild.data = loc_data[2]
-    tspan[74].firstChild.data = loc_data[0] + '++'
-    tspan[75].firstChild.data = loc_data[1] + '--'
+    tspan[73].firstChild.data = follower_data
+    tspan[75].firstChild.data = loc_data[2]
+    tspan[76].firstChild.data = loc_data[0] + '++'
+    tspan[77].firstChild.data = loc_data[1] + '--'
     f.write(svg.toxml('utf-8').decode('utf-8'))
     f.close()
 
@@ -363,10 +369,24 @@ def user_getter(username):
         }
     }'''
     variables = {'login': username}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
-    if request.status_code == 200:
-        return {'id': request.json()['data']['user']['id']}, request.json()['data']['user']['createdAt']
-    raise Exception('user_getter() has failed with a', request.status_code, request.text, QUERY_COUNT)
+    request = simple_request(user_getter.__name__, query, variables)
+    return {'id': request.json()['data']['user']['id']}, request.json()['data']['user']['createdAt']
+
+def follower_getter(username):
+    """
+    Returns the number of followers of the user
+    """
+    query_count('follower_getter')
+    query = '''
+    query($login: String!){
+        user(login: $login) {
+            followers {
+                totalCount
+            }
+        }
+    }'''
+    request = simple_request(follower_getter.__name__, query, {'login': username})
+    return int(request.json()['data']['user']['followers']['totalCount'])
 
 
 def query_count(funct_id):
@@ -401,7 +421,7 @@ def formatter(query_type, difference, funct_return=False, whitespace=0):
 
 if __name__ == '__main__':
     """
-    Andrew Grant (Andrew6rant), 2022
+    Andrew Grant (Andrew6rant), 2022-2023
     """
     print('Calculation times:')
     # define global variable for owner ID and calculate user's creation date
@@ -417,6 +437,7 @@ if __name__ == '__main__':
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
     contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    follower_data, follower_time = perf_counter(follower_getter, USER_NAME)
 
     # several repositories that I've contributed to have since been deleted.
     if OWNER_ID == {'id': 'MDQ6VXNlcjU3MzMxMTM0'}: # only calculate for user Andrew6rant
@@ -430,11 +451,12 @@ if __name__ == '__main__':
     star_data = formatter('star counter', star_time, star_data)
     repo_data = formatter('my repositories', repo_time, repo_data, 2)
     contrib_data = formatter('contributed repos', contrib_time, contrib_data, 2)
+    follower_data = formatter('follower counter', follower_time, follower_data, 4)
 
     for index in range(len(total_loc)-1): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
 
-    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc[:-1])
-    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, total_loc[:-1])
+    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, follower_data, total_loc[:-1])
+    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, follower_data, total_loc[:-1])
 
     # move cursor to override 'Calculation times:' with 'Total function time:' and the total function time, then move cursor back
     print('\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F',
