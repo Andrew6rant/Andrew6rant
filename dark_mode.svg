@@ -59,7 +59,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="450" class="keyColor">GitHub Stats</tspan>:
 <tspan x="370" y="470">——————</tspan>
 <tspan x="370" y="490" class="keyColor">Repos</tspan>: <tspan class="valueColor">73</tspan> {<tspan class="keyColor">Contributed</tspan>: <tspan class="valueColor">107</tspan>}  | <tspan class="keyColor">Commmits</tspan>: <tspan class="valueColor">1,751  </tspan>| <tspan class="keyColor">Stars</tspan>: <tspan class="valueColor">140</tspan>
-<tspan x="370" y="510" class="keyColor">Followers</tspan>: <tspan class="valueColor">40  </tspan>| <tspan class="keyColor">Lines of Code</tspan>: <tspan class="valueColor">414,550</tspan> (<tspan class="addColor">481,637++</tspan>, <tspan class="delColor">67,087--</tspan>)
+<tspan x="370" y="510" class="keyColor">Followers</tspan>: <tspan class="valueColor">40  </tspan>| <tspan class="keyColor">Lines of Code</tspan>: <tspan class="valueColor">414,546</tspan> (<tspan class="addColor">481,634++</tspan>, <tspan class="delColor">67,088--</tspan>)
 </text>
 
 </svg>
