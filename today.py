@@ -263,9 +263,9 @@ def flush_cache(edges, filename, comment_size):
     This is called when the number of repositories changes or when the file is first created
     """
     with open(filename, 'r') as f:
-        data = f.readlines()
+        data = []
         if comment_size > 0:
-            data = data[:comment_size] # only save the comment
+            data = f.readlines()[:comment_size] # only save the comment
     with open(filename, 'w') as f:
         f.writelines(data)
         for node in edges:
