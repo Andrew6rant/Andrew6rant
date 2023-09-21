@@ -171,7 +171,7 @@ def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, additio
 def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]):
     """
     Uses GitHub's GraphQL v4 API to query all the repositories I have access to (with respect to owner_affiliation)
-    Queries 35 repos at a time, because larger queries give a 502 timeout error and smaller queries send too many
+    Queries 60 repos at a time, because larger queries give a 502 timeout error and smaller queries send too many
     requests and also give a 502 error.
     Returns the total number of lines of code in all repositories
     """
@@ -179,7 +179,7 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
-            repositories(first: 35, after: $cursor, ownerAffiliations: $owner_affiliation) {
+            repositories(first: 60, after: $cursor, ownerAffiliations: $owner_affiliation) {
             edges {
                 node {
                     ... on Repository {
