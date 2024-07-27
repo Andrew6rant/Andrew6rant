@@ -6,7 +6,10 @@ from xml.dom import minidom
 import time
 import hashlib
 
-# Personal access token with permissions: read:enterprise, read:org, read:repo_hook, read:user, repo
+# Fine-grained personal access token with All Repositories access:
+# Account permissions: read:Followers, read:Starring, read:Watching
+# Repository permissions: read:Commit statuses, read:Contents, read:Issues, read:Metadata, read:Pull Requests
+# Issues and pull requests permissions not needed at the moment, but may be used in the future
 HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
@@ -282,14 +285,15 @@ def add_archive():
         data = f.readlines()
     old_data = data
     data = data[7:len(data)-3] # remove the comment block    
-    added_loc, deleted_loc = 0, 0
+    added_loc, deleted_loc, added_commits = 0, 0, 0
     contributed_repos = len(data)
     for line in data:
         repo_hash, total_commits, my_commits, *loc = line.split()
         added_loc += int(loc[0])
         deleted_loc += int(loc[1])
-    my_commits = old_data[-1].split()[4][:-1]
-    return [added_loc, deleted_loc, added_loc - deleted_loc, my_commits, contributed_repos]
+        if (my_commits.isdigit()): added_commits += int(my_commits)
+    added_commits += int(old_data[-1].split()[4][:-1])
+    return [added_loc, deleted_loc, added_loc - deleted_loc, added_commits, contributed_repos]
 
 def force_close_file(data, cache_comment):
     """
@@ -422,7 +426,7 @@ def formatter(query_type, difference, funct_return=False, whitespace=0):
 
 if __name__ == '__main__':
     """
-    Andrew Grant (Andrew6rant), 2022-2023
+    Andrew Grant (Andrew6rant), 2022-2024
     """
     print('Calculation times:')
     # define global variable for owner ID and calculate user's creation date
