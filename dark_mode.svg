@@ -116,7 +116,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="330" class="keyColor">Contact</tspan>:
 <tspan x="370" y="350">——————</tspan>
 <tspan x="370" y="370" class="keyColor">Email</tspan>: <tspan class="valueColor">awesomepackard@gmail.com</tspan>
-<tspan x="370" y="390" class="keyColor">LinkedIn</tspan>: <tspan class="valueColor">www.linkedin.com/in/morgan-packard-11801b31b</tspan> <!-- figure out how to hot link this as morgan packard -->
+<tspan x="370" y="390" class="keyColor">LinkedIn</tspan>: <a href="www.linkedin.com/in/morgan-packard"> <tspan class="valueColor">morgan-packard</tspan> </a> <!-- figure out how to hot link this as morgan packard -->
 <tspan x="370" y="410" class="keyColor">Discord</tspan>: <tspan class="valueColor">morgz25</tspan>
 <tspan x="370" y="450" class="keyColor">GitHub Stats</tspan>:
 <tspan x="370" y="470">——————</tspan>
