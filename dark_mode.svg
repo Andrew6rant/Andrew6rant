@@ -42,7 +42,7 @@ text, tspan {white-space: pre;}
 <tspan x="370" y="30">andrew@grant</tspan>
 <tspan x="370" y="50">——————</tspan>
 <tspan x="370" y="70" class="keyColor">OS</tspan>: <tspan class="valueColor">Windows 10, iOS</tspan>
-<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">22 years, 1 month, 1 day</tspan>
+<tspan x="370" y="90" class="keyColor">Uptime</tspan>: <tspan class="valueColor">22 years, 1 month, 2 days</tspan>
 <tspan x="370" y="110" class="keyColor">Host</tspan>: <tspan class="valueColor">Rochester Institute of Technology</tspan><tspan class="commentColor"> #RIT</tspan>
 <tspan x="370" y="130" class="keyColor">Kernel</tspan>: <tspan class="valueColor">Electrical and Computer Engineering Technology</tspan><tspan class="commentColor"> #CPET</tspan>
 <tspan x="370" y="150" class="keyColor">IDE</tspan>: <tspan class="valueColor">IntelliJ IDEA 2021.2.1, VSCode 1.64.0</tspan>
